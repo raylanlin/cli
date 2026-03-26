@@ -46,7 +46,8 @@ bun run dev -- --help
 
 # Or build a standalone binary and install it
 bun run build:local
-cp dist/minimax /usr/local/bin/minimax
+mkdir -p ~/.local/bin
+cp dist/minimax ~/.local/bin/minimax
 minimax --help
 ```
 
