@@ -1,0 +1,32 @@
+{
+  "name": "minimax-cli",
+  "version": "0.1.0",
+  "private": true,
+  "description": "CLI for the MiniMax API Platform (Token Plan)",
+  "type": "module",
+  "bin": {
+    "minimax": "./dist/minimax.mjs"
+  },
+  "files": [
+    "dist/minimax.mjs"
+  ],
+  "scripts": {
+    "dev": "bun run src/main.ts",
+    "build": "bun run build.ts",
+    "lint": "eslint src/ test/",
+    "typecheck": "tsc --noEmit",
+    "test": "bun test",
+    "test:watch": "bun test --watch",
+    "build:npm": "bun build src/main.ts --outfile dist/minimax.mjs --target node --define \"process.env.CLI_VERSION='$npm_package_version'\" && printf '#!/usr/bin/env node\\n' | cat - dist/minimax.mjs > dist/tmp && mv dist/tmp dist/minimax.mjs && chmod +x dist/minimax.mjs",
+    "prepublishOnly": "bun run build:npm"
+  },
+  "dependencies": {
+    "yaml": "^2.7.1",
+    "zod": "^3.24.4"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3",
+    "@types/bun": "latest",
+    "eslint": "^9.24.0"
+  }
+}

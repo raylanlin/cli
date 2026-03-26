@@ -1,0 +1,35 @@
+import { defineCommand } from '../../command';
+import { loadConfigFile } from '../../config/loader';
+import { getConfigPath } from '../../config/paths';
+import { formatOutput, detectOutputFormat } from '../../output/formatter';
+import type { Config } from '../../config/schema';
+import type { GlobalFlags } from '../../types/flags';
+
+export default defineCommand({
+  name: 'config show',
+  description: 'Display current configuration',
+  usage: 'minimax config show',
+  examples: [
+    'minimax config show',
+    'minimax config show --output json',
+  ],
+  async run(config: Config, flags: GlobalFlags) {
+    const file = loadConfigFile();
+    const format = detectOutputFormat(config.output);
+
+    const result: Record<string, unknown> = {
+      region: config.region,
+      base_url: config.baseUrl,
+      output: config.output,
+      timeout: config.timeout,
+      config_file: getConfigPath(),
+    };
+
+    // Mask API key if present
+    if (file.api_key) {
+      result.api_key = file.api_key.slice(0, 6) + '...' + file.api_key.slice(-4);
+    }
+
+    console.log(formatOutput(result, format));
+  },
+});

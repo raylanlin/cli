@@ -1,0 +1,34 @@
+import { describe, it, expect } from 'bun:test';
+import { default as generateCommand } from '../../../src/commands/video/generate';
+
+describe('video generate command', () => {
+  it('has correct name', () => {
+    expect(generateCommand.name).toBe('video generate');
+  });
+
+  it('requires prompt', async () => {
+    const config = {
+      apiKey: 'test-key',
+      region: 'global' as const,
+      baseUrl: 'https://api.minimax.io',
+      output: 'text' as const,
+      timeout: 10,
+      verbose: false,
+      quiet: false,
+      noColor: true,
+      yes: false,
+      dryRun: false,
+    };
+
+    await expect(
+      generateCommand.execute(config, {
+        quiet: false,
+        verbose: false,
+        noColor: true,
+        yes: false,
+        dryRun: false,
+        help: false,
+      }),
+    ).rejects.toThrow('--prompt is required');
+  });
+});
