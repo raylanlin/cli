@@ -40,7 +40,14 @@ bun install -g minimax-cli
 git clone https://github.com/MiniMax-AI-Dev/minimax-cli.git
 cd minimax-cli
 bun install
+
+# Run directly from source
 bun run dev -- --help
+
+# Or build a standalone binary and install it
+bun run build:local
+cp dist/minimax /usr/local/bin/minimax
+minimax --help
 ```
 
 ## Quick start
