@@ -20,6 +20,9 @@ import quotaShow from './commands/quota/show';
 import configShow from './commands/config/show';
 import configSet from './commands/config/set';
 import configExportSchema from './commands/config/export-schema';
+import fileUpload from './commands/file/upload';
+import fileList from './commands/file/list';
+import fileDelete from './commands/file/delete';
 import update from './commands/update';
 
 import type { Config } from './config/schema';
@@ -189,8 +192,9 @@ Resources:
   music      Music generation (generate)
   search     Web search (query)
   vision     Image understanding (describe)
+  file       File management (upload, list, delete)
   quota      Usage quotas (show)
-  config     CLI configuration (show, set)
+  config     CLI configuration (show, set, export-schema)
   update     Update minimax to a newer version
 
 Global Flags:
@@ -268,5 +272,8 @@ export const registry = new CommandRegistry({
   'config show':      configShow,
   'config set':       configSet,
   'config export-schema': configExportSchema,
+  'file upload':      fileUpload,
+  'file list':        fileList,
+  'file delete':      fileDelete,
   'update':           update,
 });
