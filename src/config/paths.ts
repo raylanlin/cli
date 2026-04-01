@@ -8,7 +8,7 @@ export function getConfigDir(): string {
 }
 
 export function getConfigPath(): string {
-  return join(getConfigDir(), 'config.yaml');
+  return join(getConfigDir(), 'config.json');
 }
 
 export function getCredentialsPath(): string {

@@ -1,5 +1,4 @@
 import { readFileSync, writeFileSync, existsSync } from 'fs';
-import { parse as parseYaml, stringify as yamlStringify } from 'yaml';
 import { parseConfigFile, REGIONS, type Config, type ConfigFile, type Region } from './schema';
 import { ensureConfigDir, getConfigPath } from './paths';
 import { detectOutputFormat, type OutputFormat } from '../output/formatter';
@@ -9,7 +8,7 @@ export function readConfigFile(): ConfigFile {
   const path = getConfigPath();
   if (!existsSync(path)) return {};
   try {
-    return parseConfigFile(parseYaml(readFileSync(path, 'utf-8')));
+    return parseConfigFile(JSON.parse(readFileSync(path, 'utf-8')));
   } catch {
     return {};
   }
@@ -17,7 +16,7 @@ export function readConfigFile(): ConfigFile {
 
 export async function writeConfigFile(data: Record<string, unknown>): Promise<void> {
   await ensureConfigDir();
-  writeFileSync(getConfigPath(), yamlStringify(data), { mode: 0o600 });
+  writeFileSync(getConfigPath(), JSON.stringify(data, null, 2) + '\n', { mode: 0o600 });
 }
 
 export function loadConfig(flags: GlobalFlags): Config {
@@ -31,7 +30,6 @@ export function loadConfig(flags: GlobalFlags): Config {
   const cachedRegion = file.region;
   const region = (explicitRegion || cachedRegion || 'global') as Region;
 
-  // Re-detect if: no explicit region AND (no cached region OR key fingerprint changed)
   const activeKey = apiKey || fileApiKey || envApiKey;
   const keyFingerprint = activeKey ? activeKey.slice(0, 8) : undefined;
   const needsRegionDetection = !explicitRegion
