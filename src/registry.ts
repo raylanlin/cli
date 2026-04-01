@@ -77,6 +77,14 @@ class CommandRegistry {
       return { command: node.command, extra: commandPath.slice(matched.length) };
     }
 
+    // Single child: auto-forward (e.g. `minimax quota` → `minimax quota show`)
+    if (matched.length > 0 && node.children.size === 1) {
+      const [, child] = node.children.entries().next().value as [string, CommandNode];
+      if (child.command) {
+        return { command: child.command, extra: commandPath.slice(matched.length) };
+      }
+    }
+
     // If we matched some path but no command, show help for that group
     if (matched.length > 0 && node.children.size > 0) {
       const subcommands = Array.from(node.children.entries())
