@@ -8,6 +8,9 @@ export default defineCommand({
   name: 'auth logout',
   description: 'Revoke tokens and clear stored credentials',
   usage: 'minimax auth logout [--yes] [--dry-run]',
+  options: [
+    { flag: '--yes', description: 'Skip confirmation prompt' },
+  ],
   examples: [
     'minimax auth logout',
     'minimax auth logout --dry-run',

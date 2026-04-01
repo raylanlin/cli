@@ -128,55 +128,6 @@ minimax update latest
 
 ---
 
-## 全局 Flag
-
-| Flag | 说明 |
-|---|---|
-| `--api-key <key>` | API Key（覆盖配置文件） |
-| `--region <global\|cn>` | 接口区域 |
-| `--output <text\|json\|yaml>` | 输出格式 |
-| `--quiet` | 只输出数据，无装饰信息 |
-| `--verbose` | 打印 HTTP 请求/响应详情 |
-| `--dry-run` | 展示请求体，不发起 API 调用 |
-| `--async` | 立即返回任务 ID（视频异步模式） |
-| `--non-interactive` | 禁用交互提示（CI/Agent 模式） |
-| `--timeout <秒>` | 请求超时（默认 300 秒） |
-| `--no-color` | 关闭 ANSI 颜色 |
-
-任意命令后加 `--help` 查看完整参数。
-
----
-
-## Agent / CI 集成
-
-一键导出所有命令的 JSON Tool Schema：
-
-```bash
-minimax config export-schema | jq .
-minimax config export-schema --command "text chat"
-```
-
-兼容 Cursor、Cline、Dify 等任何支持 Anthropic/OpenAI Tool Schema 的 Agent 框架。完整集成指南见 [skill/SKILL.md](skill/SKILL.md)。
-
-**管道用法：**
-
-```bash
-minimax text chat --message "你好" --output json | jq .content
-minimax image "Logo" --quiet | xargs curl -O
-minimax video generate --prompt "机器人" --async --quiet
-```
-
-stdout 始终是纯净数据，stderr 承载所有 UI（状态栏、进度、警告）。
-
----
-
-## 输出规范
-
-- `stdout` → 纯数据（文字、URL、JSON、原始音频字节流）
-- `stderr` → 状态栏、进度条、警告、帮助信息
-
----
-
 ## 许可证
 
 MIT
