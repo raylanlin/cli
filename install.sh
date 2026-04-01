@@ -13,7 +13,7 @@ case "$CHANNEL" in
     ;;
 esac
 
-REPO="MiniMax-AI-Dev/minimax-cli"
+REPO="MiniMax-AI-Dev/cli"
 INSTALL_DIR="${MINIMAX_INSTALL_DIR:-$HOME/.local/bin}"
 
 # Dependency check: curl or wget
@@ -27,34 +27,45 @@ else
   echo "curl or wget is required." >&2; exit 1
 fi
 
-# Detect OS
-case "$(uname -s)" in
-  Darwin) OS="darwin" ;;
-  Linux)  OS="linux"  ;;
-  *) echo "Unsupported OS: $(uname -s)" >&2; exit 1 ;;
-esac
-
-# Detect architecture
-case "$(uname -m)" in
-  x86_64|amd64) ARCH="x64"   ;;
-  arm64|aarch64) ARCH="arm64" ;;
-  *) echo "Unsupported architecture: $(uname -m)" >&2; exit 1 ;;
-esac
-
-# Rosetta 2: x64 shell on ARM Mac → use native arm64 binary
-if [ "$OS" = "darwin" ] && [ "$ARCH" = "x64" ]; then
-  if [ "$(sysctl -n sysctl.proc_translated 2>/dev/null)" = "1" ]; then
-    ARCH="arm64"
+# Prefer Node.js >= 18 (much smaller download, ~200KB vs ~57MB)
+USE_NODE=0
+if command -v node >/dev/null 2>&1; then
+  NODE_MAJOR=$(node --version 2>/dev/null | sed 's/v//' | cut -d. -f1)
+  if [ -n "$NODE_MAJOR" ] && [ "$NODE_MAJOR" -ge 18 ] 2>/dev/null; then
+    USE_NODE=1
   fi
 fi
 
-# musl detection on Linux
-PLATFORM="${OS}-${ARCH}"
-if [ "$OS" = "linux" ]; then
-  if [ -f /lib/libc.musl-x86_64.so.1 ] || \
-     [ -f /lib/libc.musl-aarch64.so.1 ] || \
-     ldd /bin/ls 2>&1 | grep -q musl; then
-    PLATFORM="${OS}-${ARCH}-musl"
+if [ "$USE_NODE" = "0" ]; then
+  # Detect OS
+  case "$(uname -s)" in
+    Darwin) OS="darwin" ;;
+    Linux)  OS="linux"  ;;
+    *) echo "Unsupported OS: $(uname -s)" >&2; exit 1 ;;
+  esac
+
+  # Detect architecture
+  case "$(uname -m)" in
+    x86_64|amd64)  ARCH="x64"   ;;
+    arm64|aarch64) ARCH="arm64" ;;
+    *) echo "Unsupported architecture: $(uname -m)" >&2; exit 1 ;;
+  esac
+
+  # Rosetta 2: x64 shell on ARM Mac → use native arm64 binary
+  if [ "$OS" = "darwin" ] && [ "$ARCH" = "x64" ]; then
+    if [ "$(sysctl -n sysctl.proc_translated 2>/dev/null)" = "1" ]; then
+      ARCH="arm64"
+    fi
+  fi
+
+  # musl detection on Linux
+  PLATFORM="${OS}-${ARCH}"
+  if [ "$OS" = "linux" ]; then
+    if [ -f /lib/libc.musl-x86_64.so.1 ] || \
+       [ -f /lib/libc.musl-aarch64.so.1 ] || \
+       ldd /bin/ls 2>&1 | grep -q musl; then
+      PLATFORM="${OS}-${ARCH}-musl"
+    fi
   fi
 fi
 
@@ -78,13 +89,22 @@ if [ -z "$VERSION" ]; then
   echo "Failed to resolve version." >&2; exit 1
 fi
 
-echo "Installing minimax ${VERSION} for ${PLATFORM}..."
-
-# Fetch manifest and extract SHA256 (pure sh, no jq required)
 BASE_URL="https://github.com/${REPO}/releases/download/${VERSION}"
+
+# Fetch manifest and extract checksum
 MANIFEST=$(download "${BASE_URL}/manifest.json") || {
   echo "Failed to fetch manifest.json" >&2; exit 1
 }
+
+if [ "$USE_NODE" = "1" ]; then
+  PLATFORM="node"
+  DOWNLOAD_FILE="minimax.mjs"
+  echo "Installing minimax ${VERSION} (Node.js)..."
+else
+  DOWNLOAD_FILE="minimax-${PLATFORM}"
+  echo "Installing minimax ${VERSION} for ${PLATFORM}..."
+fi
+
 CHECKSUM=$(printf '%s' "$MANIFEST" | tr -d '\n' | \
   sed "s/.*\"${PLATFORM}\"[^}]*\"checksum\" *: *\"\([a-f0-9]*\)\".*/\1/")
 
@@ -92,11 +112,11 @@ if [ -z "$CHECKSUM" ] || [ "${#CHECKSUM}" -ne 64 ]; then
   echo "Platform '${PLATFORM}' not found in manifest." >&2; exit 1
 fi
 
-# Download binary to temp file
+# Download to temp file
 TMP=$(mktemp)
 trap 'rm -f "$TMP"' EXIT
 
-download_to "${BASE_URL}/minimax-${PLATFORM}" "$TMP" || {
+download_to "${BASE_URL}/${DOWNLOAD_FILE}" "$TMP" || {
   echo "Download failed." >&2; exit 1
 }
 
