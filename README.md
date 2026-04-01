@@ -128,55 +128,6 @@ minimax update latest
 
 ---
 
-## Global Flags
-
-| Flag | Description |
-|---|---|
-| `--api-key <key>` | API key (overrides config) |
-| `--region <global\|cn>` | API region |
-| `--output <text\|json\|yaml>` | Output format |
-| `--quiet` | Data only on stdout, no decorations |
-| `--verbose` | Print HTTP request/response |
-| `--dry-run` | Show request body, no API call |
-| `--async` | Return task ID immediately (video) |
-| `--non-interactive` | Disable prompts (CI/agent mode) |
-| `--timeout <seconds>` | Request timeout (default: 300) |
-| `--no-color` | Disable ANSI colors |
-
-Add `--help` to any command for full options.
-
----
-
-## Agent / CI Integration
-
-Export all commands as JSON Tool Schema in one shot:
-
-```bash
-minimax config export-schema | jq .
-minimax config export-schema --command "text chat"
-```
-
-Compatible with Cursor, Cline, Dify, and any framework that speaks Anthropic/OpenAI tool schemas. See [skill/SKILL.md](skill/SKILL.md) for the full integration guide.
-
-**Piping:**
-
-```bash
-minimax text chat --message "Hello" --output json | jq .content
-minimax image "A logo" --quiet | xargs curl -O
-minimax video generate --prompt "A robot" --async --quiet
-```
-
-stdout is always clean data. stderr carries all UI (status bar, spinners, progress).
-
----
-
-## Output Philosophy
-
-- `stdout` → data only (text, URLs, JSON, raw audio bytes)
-- `stderr` → status bar, progress, warnings, help
-
----
-
 ## License
 
 MIT

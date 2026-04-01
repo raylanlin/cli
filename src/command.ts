@@ -47,10 +47,8 @@ export const GLOBAL_OPTIONS: OptionDef[] = [
   { flag: '--quiet',             description: 'Suppress non-essential output' },
   { flag: '--verbose',           description: 'Print HTTP request/response details' },
   { flag: '--no-color',          description: 'Disable ANSI colors' },
-  { flag: '--yes',               description: 'Skip confirmation prompts' },
   { flag: '--dry-run',           description: 'Dry run mode' },
   { flag: '--non-interactive',   description: 'Disable interactive prompts' },
-  { flag: '--async',             description: 'Return task ID immediately' },
   { flag: '--help',              description: 'Show help' },
   { flag: '--version',           description: 'Print version' },
 ];

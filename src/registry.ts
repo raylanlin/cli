@@ -165,10 +165,8 @@ Global Flags:
   --verbose              Print HTTP request/response details
   --timeout <seconds>    Request timeout (default: 300)
   --no-color             Disable ANSI colors and spinners
-  --yes                  Skip confirmation prompts
   --dry-run              Show what would happen without executing
   --non-interactive      Disable interactive prompts (CI/agent mode)
-  --async                Return task ID immediately without polling
   --version              Print version and exit
   --help                 Show help
 
