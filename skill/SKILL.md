@@ -5,7 +5,7 @@ Use `minimax` to generate text, images, video, speech, music, and perform web se
 ## Prerequisites
 
 ```bash
-# Auth (persisted to ~/.minimax/credentials.yaml)
+# Auth (persisted to ~/.minimax/credentials.json)
 minimax auth login --api-key sk-xxxxx
 
 # Or pass per-call
@@ -140,7 +140,7 @@ minimax video task get --task-id <id> [--output json]
 Download a completed video by task ID.
 
 ```bash
-minimax video download --task-id <id> [--out <path>]
+minimax video download --file-id <id> [--out <path>]
 ```
 
 ---
@@ -312,7 +312,7 @@ minimax video download --task-id "$TASK" --out robot.mp4
 
 ## Configuration Precedence
 
-CLI flags → environment variables → `~/.minimax/config.yaml` → defaults.
+CLI flags → environment variables → `~/.minimax/config.json` → defaults.
 
 ```bash
 # Persistent config
