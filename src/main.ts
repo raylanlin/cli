@@ -35,7 +35,7 @@ async function main() {
     process.exit(0);
   }
 
-  const commandPath = scanCommandPath(argv);
+  const commandPath = scanCommandPath(argv, GLOBAL_OPTIONS);
 
   if (argv.includes('--help') || argv.includes('-h')) {
     registry.printHelp(commandPath, process.stderr);
