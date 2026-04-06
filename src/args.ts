@@ -40,13 +40,34 @@ function buildSchema(options: OptionDef[]): FlagSchema {
 
 /**
  * Quick scan: collect positional (non-dash) args to determine the command path.
- * Does not consume flag values — just skips dash-prefixed tokens.
+ * Skips global flags and their values so that e.g. `--output json text chat`
+ * correctly produces ['text', 'chat'] instead of ['json', 'text', 'chat'].
  */
-export function scanCommandPath(argv: string[]): string[] {
+export function scanCommandPath(argv: string[], globalOptions: OptionDef[] = []): string[] {
+  const globalSchema = buildSchema(globalOptions);
   const path: string[] = [];
-  for (const arg of argv) {
+  let i = 0;
+  while (i < argv.length) {
+    const arg = argv[i]!;
     if (arg === '--') break;
-    if (!arg.startsWith('-')) path.push(arg);
+
+    if (arg.startsWith('--')) {
+      const eqIdx = arg.indexOf('=');
+      const key = eqIdx !== -1 ? arg.slice(2, eqIdx) : arg.slice(2);
+      const camelKey = kebabToCamel(key);
+
+      if (!globalSchema.booleans.has(camelKey) && eqIdx === -1) {
+        i += 2;
+      } else {
+        i += 1;
+      }
+      continue;
+    }
+
+    if (arg.startsWith('-')) { i++; continue; }
+
+    path.push(arg);
+    i++;
   }
   return path;
 }
