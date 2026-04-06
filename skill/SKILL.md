@@ -184,7 +184,7 @@ echo "Breaking news." | minimax speech synthesize --text-file - --out news.mp3
 
 ### music generate
 
-Generate music. Model: `music-2.5`.
+Generate music. Model: `music-2.5`. Responds well to rich, structured descriptions.
 
 ```bash
 minimax music generate --prompt <text> [--lyrics <text>] [flags]
@@ -192,9 +192,23 @@ minimax music generate --prompt <text> [--lyrics <text>] [flags]
 
 | Flag | Type | Description |
 |---|---|---|
-| `--prompt <text>` | string | Music style description |
-| `--lyrics <text>` | string | Song lyrics |
+| `--prompt <text>` | string | Music style description (can be detailed) |
+| `--lyrics <text>` | string | Song lyrics with structure tags. Use `"\u65e0\u6b4c\u8bcd"` for instrumental. Cannot be used with `--instrumental` |
 | `--lyrics-file <path>` | string | Read lyrics from file. Use `-` for stdin |
+| `--vocals <text>` | string | Vocal style, e.g. `"warm male baritone"`, `"bright female soprano"`, `"duet with harmonies"` |
+| `--genre <text>` | string | Music genre, e.g. folk, pop, jazz |
+| `--mood <text>` | string | Mood or emotion, e.g. warm, melancholic, uplifting |
+| `--instruments <text>` | string | Instruments to feature, e.g. `"acoustic guitar, piano"` |
+| `--tempo <text>` | string | Tempo description, e.g. fast, slow, moderate |
+| `--bpm <number>` | number | Exact tempo in beats per minute |
+| `--key <text>` | string | Musical key, e.g. C major, A minor, G sharp |
+| `--avoid <text>` | string | Elements to avoid in the generated music |
+| `--use-case <text>` | string | Use case context, e.g. `"background music for video"`, `"theme song"` |
+| `--structure <text>` | string | Song structure, e.g. `"verse-chorus-verse-bridge-chorus"` |
+| `--references <text>` | string | Reference tracks or artists, e.g. `"similar to Ed Sheeran"` |
+| `--extra <text>` | string | Additional fine-grained requirements |
+| `--instrumental` | boolean | Generate instrumental music (no vocals). Cannot be used with `--lyrics` or `--lyrics-file` |
+| `--aigc-watermark` | boolean | Embed AI-generated content watermark |
 | `--format <fmt>` | string | Audio format (default: `mp3`) |
 | `--sample-rate <hz>` | number | Sample rate (default: 44100) |
 | `--bitrate <bps>` | number | Bitrate (default: 256000) |
@@ -204,7 +218,19 @@ minimax music generate --prompt <text> [--lyrics <text>] [flags]
 At least one of `--prompt` or `--lyrics` is required.
 
 ```bash
+# Simple usage
 minimax music generate --prompt "Upbeat pop" --lyrics "La la la..." --out song.mp3 --quiet
+
+# Detailed prompt with vocal characteristics
+minimax music generate --prompt "Warm morning folk" \
+  --vocals "male and female duet, harmonies in chorus" \
+  --instruments "acoustic guitar, piano" \
+  --bpm 95 \
+  --lyrics-file song.txt \
+  --out duet.mp3
+
+# Instrumental (use --instrumental flag)
+minimax music generate --prompt "Cinematic orchestral, building tension" --instrumental --out bgm.mp3
 ```
 
 ---
