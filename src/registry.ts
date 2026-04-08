@@ -77,7 +77,7 @@ class CommandRegistry {
       return { command: node.command, extra: commandPath.slice(matched.length) };
     }
 
-    // Single child: auto-forward (e.g. `minimax quota` → `minimax quota show`)
+    // Single child: auto-forward (e.g. `mmx quota` → `mmx quota show`)
     if (matched.length > 0 && node.children.size === 1) {
       const [, child] = node.children.entries().next().value as [string, CommandNode];
       if (child.command) {
@@ -95,16 +95,16 @@ class CommandRegistry {
         })
         .join('\n');
       throw new CLIError(
-        `Unknown command: minimax ${commandPath.join(' ')}\n\nAvailable commands:\n${subcommands}`,
+        `Unknown command: mmx ${commandPath.join(' ')}\n\nAvailable commands:\n${subcommands}`,
         ExitCode.USAGE,
-        `minimax ${matched.join(' ')} --help`,
+        `mmx ${matched.join(' ')} --help`,
       );
     }
 
     throw new CLIError(
-      `Unknown command: minimax ${commandPath.join(' ')}`,
+      `Unknown command: mmx ${commandPath.join(' ')}`,
       ExitCode.USAGE,
-      'minimax --help',
+      'mmx --help',
     );
   }
 
@@ -135,7 +135,7 @@ class CommandRegistry {
     }
 
     // Group help
-    out.write(`\nUsage: minimax ${commandPath.join(' ')} <command> [flags]\n\n`);
+    out.write(`\nUsage: mmx ${commandPath.join(' ')} <command> [flags]\n\n`);
     out.write('Commands:\n');
     this.printChildren(node, commandPath.join(' '), out);
     out.write('\n');
@@ -143,13 +143,13 @@ class CommandRegistry {
 
   private printRootHelp(out: NodeJS.WriteStream): void {
     out.write(`
-  __  __ ___ _   _ ___ __  __    _   __  __
- |  \\/  |_ _| \\ | |_ _|  \\/  |  / \\ \\ \\/ /
- | |\\/| || ||  \\| || || |\\/| | / _ \\ \\  /
- | |  | || || |\\  || || |  | |/ ___ \\/  \\
- |_|  |_|___|_| \\_|___|_|  |_/_/   \\_\\_/\\
+  __  __ __  ____  __
+ |  \\/  |  \\/  \\ \\/ /
+ | |\\/| | |\\/| |\\  /
+ | |  | | |  | |/  \\
+ |_|  |_|_|  |_/_/\\_\\
 
-Usage: minimax <resource> <command> [flags]
+Usage: mmx <resource> <command> [flags]
 
 Resources:
   auth       Authentication (login, status, refresh, logout)
@@ -162,7 +162,7 @@ Resources:
   vision     Image understanding (describe)
   quota      Usage quotas (show)
   config     CLI configuration (show, set, export-schema)
-  update     Update minimax to a newer version
+  update     Update mmx to a newer version
 
 Global Flags:
   --api-key <key>        API key (overrides all other auth)
@@ -180,7 +180,7 @@ Global Flags:
 
 Getting Help:
   Add --help after any command to see its full list of options, defaults,
-  and usage examples. For example: minimax text chat --help
+  and usage examples. For example: mmx text chat --help
 `);
   }
 
@@ -203,7 +203,7 @@ Getting Help:
       out.write('\n');
     }
     out.write(`Global flags (--api-key, --output, --quiet, etc.) are always available.\n`);
-    out.write(`Run 'minimax --help' for the full list.\n`);
+    out.write(`Run 'mmx --help' for the full list.\n`);
   }
 
   private printChildren(node: CommandNode, prefix: string, out: NodeJS.WriteStream): void {

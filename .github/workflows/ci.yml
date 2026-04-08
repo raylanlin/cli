@@ -12,5 +12,5 @@ jobs:
       - run: bun test
       - name: Smoke test
         run: |
-          bun build src/main.ts --compile --outfile dist/minimax
-          ./dist/minimax --version
+          bun build src/main.ts --compile --outfile dist/mmx
+          ./dist/mmx --version

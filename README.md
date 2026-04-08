@@ -8,7 +8,7 @@
 </p>
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/minimax-cli"><img src="https://img.shields.io/npm/v/minimax-cli.svg" alt="npm version" /></a>
+  <a href="https://www.npmjs.com/package/mmx-cli"><img src="https://img.shields.io/npm/v/mmx-cli.svg" alt="npm version" /></a>
   <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License: MIT" /></a>
   <a href="https://nodejs.org"><img src="https://img.shields.io/badge/node-%3E%3D18-brightgreen.svg" alt="Node.js >= 18" /></a>
 </p>
@@ -31,7 +31,7 @@
 ## Install
 
 ```bash
-npm install -g minimax-cli
+npm install -g mmx-cli
 ```
 
 > Requires [Node.js](https://nodejs.org) 18+
@@ -40,104 +40,104 @@ npm install -g minimax-cli
 
 ```bash
 # Authenticate
-minimax auth login --api-key sk-xxxxx
+mmx auth login --api-key sk-xxxxx
 
 # Start creating
-minimax text chat --message "What is MiniMax?"
-minimax image "A cat in a spacesuit"
-minimax speech synthesize --text "Hello!" --out hello.mp3
-minimax video generate --prompt "Ocean waves at sunset"
-minimax music "Upbeat pop"
-minimax search "MiniMax AI latest news"
-minimax vision photo.jpg
-minimax quota
+mmx text chat --message "What is MiniMax?"
+mmx image "A cat in a spacesuit"
+mmx speech synthesize --text "Hello!" --out hello.mp3
+mmx video generate --prompt "Ocean waves at sunset"
+mmx music "Upbeat pop"
+mmx search "MiniMax AI latest news"
+mmx vision photo.jpg
+mmx quota
 ```
 
 ## Commands
 
-### `minimax text`
+### `mmx text`
 
 ```bash
-minimax text chat --message "Write a poem"
-minimax text chat --model MiniMax-M2.7-highspeed --message "Hello" --stream
-minimax text chat --system "You are a coding assistant" --message "Fizzbuzz in Go"
-minimax text chat --message "user:Hi" --message "assistant:Hey!" --message "How are you?"
-cat messages.json | minimax text chat --messages-file - --output json
+mmx text chat --message "Write a poem"
+mmx text chat --model MiniMax-M2.7-highspeed --message "Hello" --stream
+mmx text chat --system "You are a coding assistant" --message "Fizzbuzz in Go"
+mmx text chat --message "user:Hi" --message "assistant:Hey!" --message "How are you?"
+cat messages.json | mmx text chat --messages-file - --output json
 ```
 
-### `minimax image`
+### `mmx image`
 
 ```bash
-minimax image "A cat in a spacesuit"
-minimax image generate --prompt "A cat" --n 3 --aspect-ratio 16:9
-minimax image generate --prompt "Logo" --out-dir ./out/
+mmx image "A cat in a spacesuit"
+mmx image generate --prompt "A cat" --n 3 --aspect-ratio 16:9
+mmx image generate --prompt "Logo" --out-dir ./out/
 ```
 
-### `minimax video`
+### `mmx video`
 
 ```bash
-minimax video generate --prompt "Ocean waves at sunset" --async
-minimax video generate --prompt "A robot painting" --download sunset.mp4
-minimax video task get --task-id 123456
-minimax video download --file-id 176844028768320 --out video.mp4
+mmx video generate --prompt "Ocean waves at sunset" --async
+mmx video generate --prompt "A robot painting" --download sunset.mp4
+mmx video task get --task-id 123456
+mmx video download --file-id 176844028768320 --out video.mp4
 ```
 
-### `minimax speech`
+### `mmx speech`
 
 ```bash
-minimax speech synthesize --text "Hello!" --out hello.mp3
-minimax speech synthesize --text "Stream me" --stream | mpv -
-minimax speech synthesize --text "Hi" --voice Boyan_new_hailuo --speed 1.2
-echo "Breaking news" | minimax speech synthesize --text-file - --out news.mp3
-minimax speech voices
+mmx speech synthesize --text "Hello!" --out hello.mp3
+mmx speech synthesize --text "Stream me" --stream | mpv -
+mmx speech synthesize --text "Hi" --voice Boyan_new_hailuo --speed 1.2
+echo "Breaking news" | mmx speech synthesize --text-file - --out news.mp3
+mmx speech voices
 ```
 
-### `minimax music`
+### `mmx music`
 
 ```bash
-minimax music "Upbeat pop"
-minimax music generate --prompt "Jazz" --lyrics "La la la" --out song.mp3
+mmx music "Upbeat pop"
+mmx music generate --prompt "Jazz" --lyrics "La la la" --out song.mp3
 ```
 
-### `minimax vision`
+### `mmx vision`
 
 ```bash
-minimax vision photo.jpg
-minimax vision describe --image https://example.com/img.jpg --prompt "What breed?"
-minimax vision describe --file-id file-123
+mmx vision photo.jpg
+mmx vision describe --image https://example.com/img.jpg --prompt "What breed?"
+mmx vision describe --file-id file-123
 ```
 
-### `minimax search`
+### `mmx search`
 
 ```bash
-minimax search "MiniMax AI"
-minimax search query --q "latest news" --output json
+mmx search "MiniMax AI"
+mmx search query --q "latest news" --output json
 ```
 
-### `minimax auth`
+### `mmx auth`
 
 ```bash
-minimax auth login --api-key sk-xxxxx
-minimax auth login                    # OAuth browser flow
-minimax auth status
-minimax auth refresh
-minimax auth logout
+mmx auth login --api-key sk-xxxxx
+mmx auth login                    # OAuth browser flow
+mmx auth status
+mmx auth refresh
+mmx auth logout
 ```
 
-### `minimax config` · `minimax quota`
+### `mmx config` · `mmx quota`
 
 ```bash
-minimax quota
-minimax config show
-minimax config set --key region --value cn
-minimax config export-schema | jq .
+mmx quota
+mmx config show
+mmx config set --key region --value cn
+mmx config export-schema | jq .
 ```
 
-### `minimax update`
+### `mmx update`
 
 ```bash
-minimax update
-minimax update latest
+mmx update
+mmx update latest
 ```
 
 ## License

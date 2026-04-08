@@ -22,7 +22,7 @@ export async function request(config: Config, opts: RequestOpts): Promise<Respon
 
   const version = process.env.CLI_VERSION ?? '0.3.1';
   const headers: Record<string, string> = {
-    'User-Agent': `minimax-cli/${version}`,
+    'User-Agent': `mmx-cli/${version}`,
     ...opts.headers,
   };
 

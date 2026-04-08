@@ -6,11 +6,11 @@ import { join } from 'path';
 import { tmpdir } from 'os';
 
 describe('credentials', () => {
-  const testDir = join(tmpdir(), `minimax-test-${Date.now()}`);
+  const testDir = join(tmpdir(), `mmx-test-${Date.now()}`);
   const originalHome = process.env.HOME;
 
   beforeEach(() => {
-    mkdirSync(join(testDir, '.minimax'), { recursive: true });
+    mkdirSync(join(testDir, '.mmx'), { recursive: true });
     process.env.HOME = testDir;
   });
 

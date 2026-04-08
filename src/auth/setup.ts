@@ -40,6 +40,6 @@ export async function ensureApiKey(config: Config): Promise<void> {
   await writeConfigFile(data);
   config.fileApiKey = key;
 
-  const path = config.configPath ?? '~/.minimax/config.json';
+  const path = config.configPath ?? '~/.mmx/config.json';
   process.stderr.write(`API key saved to ${path}\n`);
 }

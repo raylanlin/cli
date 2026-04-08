@@ -19,7 +19,7 @@ import { promptText, failIfMissing } from '../../utils/prompt';
 export default defineCommand({
   name: 'image generate',
   description: 'Generate images (image-01)',
-  usage: 'minimax image generate --prompt <text> [flags]',
+  usage: 'mmx image generate --prompt <text> [flags]',
   options: [
     { flag: '--prompt <text>', description: 'Image description', required: true },
     { flag: '--aspect-ratio <ratio>', description: 'Aspect ratio (e.g. 16:9, 1:1)' },
@@ -29,9 +29,9 @@ export default defineCommand({
     { flag: '--out-prefix <prefix>', description: 'Filename prefix (default: image)' },
   ],
   examples: [
-    'minimax image generate --prompt "A cat in a spacesuit on Mars" --aspect-ratio 16:9',
-    'minimax image generate --prompt "Logo design" --n 3 --out-dir ./generated/',
-    'minimax image generate --prompt "Mountain landscape" --quiet',
+    'mmx image generate --prompt "A cat in a spacesuit on Mars" --aspect-ratio 16:9',
+    'mmx image generate --prompt "Logo design" --n 3 --out-dir ./generated/',
+    'mmx image generate --prompt "Mountain landscape" --quiet',
   ],
   async run(config: Config, flags: GlobalFlags) {
     let prompt = (flags.prompt ?? (flags._positional as string[]|undefined)?.[0]) as string | undefined;
@@ -47,7 +47,7 @@ export default defineCommand({
         }
         prompt = hint;
       } else {
-        failIfMissing('prompt', 'minimax image generate --prompt <text>');
+        failIfMissing('prompt', 'mmx image generate --prompt <text>');
       }
     }
 

@@ -13,10 +13,10 @@ import type { QuotaResponse } from '../../types/api';
 export default defineCommand({
   name: 'auth status',
   description: 'Show current authentication state and quota snapshot',
-  usage: 'minimax auth status',
+  usage: 'mmx auth status',
   examples: [
-    'minimax auth status',
-    'minimax auth status --output json',
+    'mmx auth status',
+    'mmx auth status --output json',
   ],
   async run(config: Config, _flags: GlobalFlags) {
     try {
@@ -74,7 +74,7 @@ export default defineCommand({
       const result = {
         authenticated: false,
         message: 'Not authenticated.',
-        hint: 'Run: minimax auth login\nOr set $MINIMAX_API_KEY',
+        hint: 'Run: mmx auth login\nOr set $MINIMAX_API_KEY',
       };
       console.log(formatOutput(result, format));
     }

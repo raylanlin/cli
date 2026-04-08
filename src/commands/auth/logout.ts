@@ -7,14 +7,14 @@ import type { GlobalFlags } from '../../types/flags';
 export default defineCommand({
   name: 'auth logout',
   description: 'Revoke tokens and clear stored credentials',
-  usage: 'minimax auth logout [--yes] [--dry-run]',
+  usage: 'mmx auth logout [--yes] [--dry-run]',
   options: [
     { flag: '--yes', description: 'Skip confirmation prompt' },
   ],
   examples: [
-    'minimax auth logout',
-    'minimax auth logout --dry-run',
-    'minimax auth logout --yes',
+    'mmx auth logout',
+    'mmx auth logout --dry-run',
+    'mmx auth logout --yes',
   ],
   async run(config: Config, _flags: GlobalFlags) {
     const creds = await loadCredentials();
@@ -22,8 +22,8 @@ export default defineCommand({
     const hasConfigKey = !!fileConfig.api_key;
 
     if (config.dryRun) {
-      if (creds) console.log('Would remove ~/.minimax/credentials.json');
-      if (hasConfigKey) console.log('Would clear api_key from ~/.minimax/config.json');
+      if (creds) console.log('Would remove ~/.mmx/credentials.json');
+      if (hasConfigKey) console.log('Would clear api_key from ~/.mmx/config.json');
       if (!creds && !hasConfigKey) console.log('No credentials to clear.');
       console.log('No changes made.');
       return;
@@ -31,7 +31,7 @@ export default defineCommand({
 
     if (creds) {
       await clearCredentials();
-      process.stderr.write('Removed ~/.minimax/credentials.json\n');
+      process.stderr.write('Removed ~/.mmx/credentials.json\n');
     }
 
     if (hasConfigKey) {
@@ -39,7 +39,7 @@ export default defineCommand({
         const updated = fileConfig as Record<string, unknown>;
         delete updated.api_key;
         await writeConfigFile(updated);
-        process.stderr.write('Cleared api_key from ~/.minimax/config.json\n');
+        process.stderr.write('Cleared api_key from ~/.mmx/config.json\n');
       } catch { /* ignore */ }
     }
 

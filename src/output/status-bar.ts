@@ -24,7 +24,7 @@ export function maybeShowStatusBar(config: Config, token: string, model?: string
   if (config.quiet || printed || !process.stderr.isTTY) return;
   printed = true;
 
-  const filePath   = config.configPath ? tildePath(config.configPath) : '~/.minimax/config.json';
+  const filePath   = config.configPath ? tildePath(config.configPath) : '~/.mmx/config.json';
   const regionSrc  = config.fileRegion ? `${config.fileRegion} (file)` : 'global (default)';
   const keySrc     = config.apiKey ? '(flag)' : '(file)';
   const maskedKey  = maskToken(token);

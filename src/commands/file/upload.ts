@@ -16,14 +16,14 @@ import { resolve, basename } from 'path';
 export default defineCommand({
   name: 'file upload',
   description: 'Upload a file to MiniMax storage',
-  usage: 'minimax file upload --file <path> [--purpose <purpose>]',
+  usage: 'mmx file upload --file <path> [--purpose <purpose>]',
   options: [
     { flag: '--file <path>', description: 'Local path to the file', required: true },
     { flag: '--purpose <string>', description: 'File purpose (default: retrieval)' },
   ],
   examples: [
-    'minimax file upload --file doc.pdf',
-    'minimax file upload --file image.png --purpose vision',
+    'mmx file upload --file doc.pdf',
+    'mmx file upload --file image.png --purpose vision',
   ],
   async run(config: Config, flags: GlobalFlags) {
     let filePath = flags.file as string | undefined;
@@ -36,7 +36,7 @@ export default defineCommand({
           process.exit(1);
         }
       } else {
-        failIfMissing('file', 'minimax file upload --file <path>');
+        failIfMissing('file', 'mmx file upload --file <path>');
       }
     }
 

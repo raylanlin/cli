@@ -21,15 +21,15 @@ function filterByLanguage(voices: SystemVoiceInfo[], language: string): SystemVo
 export default defineCommand({
   name: 'speech voices',
   description: 'List available system voices',
-  usage: 'minimax speech voices [--language <lang>]',
+  usage: 'mmx speech voices [--language <lang>]',
   options: [
     { flag: '--language <lang>', description: 'Filter voices by language (e.g. english, korean, japanese)' },
   ],
   examples: [
-    'minimax speech voices',
-    'minimax speech voices --language english',
-    'minimax speech voices --language korean',
-    'minimax speech voices --output json',
+    'mmx speech voices',
+    'mmx speech voices --language english',
+    'mmx speech voices --language korean',
+    'mmx speech voices --output json',
   ],
   async run(config: Config, flags: GlobalFlags) {
     const format = detectOutputFormat(config.output);

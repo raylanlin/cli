@@ -13,7 +13,7 @@ import type { SpeechRequest, SpeechResponse } from '../../types/api';
 export default defineCommand({
   name: 'speech synthesize',
   description: 'Synchronous TTS, up to 10k chars (speech-2.8-hd / 2.6 / 02)',
-  usage: 'minimax speech synthesize --text <text> [--out <path>] [flags]',
+  usage: 'mmx speech synthesize --text <text> [--out <path>] [flags]',
   options: [
     { flag: '--model <model>',           description: 'Model ID (default: speech-2.8-hd)' },
     { flag: '--text <text>',             description: 'Text to synthesize' },
@@ -33,10 +33,10 @@ export default defineCommand({
     { flag: '--stream',                  description: 'Stream raw audio to stdout' },
   ],
   examples: [
-    'minimax speech synthesize --text "Hello, world!"',
-    'minimax speech synthesize --text "Hello, world!" --out hello.mp3',
-    'echo "Breaking news." | minimax speech synthesize --text-file - --out news.mp3',
-    'minimax speech synthesize --text "Stream" --stream | mpv --no-terminal -',
+    'mmx speech synthesize --text "Hello, world!"',
+    'mmx speech synthesize --text "Hello, world!" --out hello.mp3',
+    'echo "Breaking news." | mmx speech synthesize --text-file - --out news.mp3',
+    'mmx speech synthesize --text "Stream" --stream | mpv --no-terminal -',
   ],
   async run(config: Config, flags: GlobalFlags) {
     let text = (flags.text ?? (flags._positional as string[]|undefined)?.[0]) as string | undefined;
@@ -49,7 +49,7 @@ export default defineCommand({
       throw new CLIError(
         '--text or --text-file is required.',
         ExitCode.USAGE,
-        'minimax speech synthesize --text "Hello" --out hello.mp3',
+        'mmx speech synthesize --text "Hello" --out hello.mp3',
       );
     }
 

@@ -15,7 +15,7 @@ export async function loadCredentials(): Promise<CredentialFile | null> {
   } catch (err) {
     const e = err as Error;
     if (e instanceof SyntaxError || e.message.includes('JSON')) {
-      process.stderr.write(`Warning: credentials file is corrupted. Run 'minimax auth logout' to reset.\n`);
+      process.stderr.write(`Warning: credentials file is corrupted. Run 'mmx auth logout' to reset.\n`);
     }
     return null;
   }

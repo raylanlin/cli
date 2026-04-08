@@ -1,5 +1,5 @@
 /**
- * Environment detection utilities for minimax-cli.
+ * Environment detection utilities for mmx-cli.
  *
  * Used to determine whether the CLI is running in an interactive terminal
  * (human user) or in a non-interactive environment (CI, agent, pipe, etc.),

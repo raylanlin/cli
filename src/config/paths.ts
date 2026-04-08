@@ -1,7 +1,7 @@
 import { homedir } from 'os';
 import { join } from 'path';
 
-const CONFIG_DIR_NAME = '.minimax';
+const CONFIG_DIR_NAME = '.mmx';
 
 export function getConfigDir(): string {
   return join(homedir(), CONFIG_DIR_NAME);

@@ -14,10 +14,10 @@ interface QuotaApiResponse {
 export default defineCommand({
   name: 'quota show',
   description: 'Display Token Plan usage and remaining quotas',
-  usage: 'minimax quota show',
+  usage: 'mmx quota show',
   examples: [
-    'minimax quota show',
-    'minimax quota show --output json',
+    'mmx quota show',
+    'mmx quota show --output json',
   ],
   async run(config: Config, flags: GlobalFlags) {
     if (config.dryRun) {

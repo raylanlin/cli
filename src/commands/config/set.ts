@@ -11,15 +11,15 @@ const VALID_KEYS = ['region', 'base_url', 'output', 'timeout', 'api_key'];
 export default defineCommand({
   name: 'config set',
   description: 'Set a config value',
-  usage: 'minimax config set --key <key> --value <value>',
+  usage: 'mmx config set --key <key> --value <value>',
   options: [
     { flag: '--key <key>', description: 'Config key (region, base_url, output, timeout, api_key)' },
     { flag: '--value <value>', description: 'Value to set' },
   ],
   examples: [
-    'minimax config set --key output --value json',
-    'minimax config set --key timeout --value 600',
-    'minimax config set --key base_url --value https://api-uw.minimax.io',
+    'mmx config set --key output --value json',
+    'mmx config set --key timeout --value 600',
+    'mmx config set --key base_url --value https://api-uw.minimax.io',
   ],
   async run(config: Config, flags: GlobalFlags) {
     const key = flags.key as string | undefined;
@@ -29,7 +29,7 @@ export default defineCommand({
       throw new CLIError(
         '--key and --value are required.',
         ExitCode.USAGE,
-        'minimax config set --key <key> --value <value>',
+        'mmx config set --key <key> --value <value>',
       );
     }
 

@@ -15,7 +15,7 @@ export default defineCommand({
   name: 'config export-schema',
   description:
     'Export all (or one) CLI command(s) as Anthropic/OpenAI-compatible JSON tool schemas',
-  usage: 'minimax config export-schema [--command "<name>"]',
+  usage: 'mmx config export-schema [--command "<name>"]',
   options: [
     {
       flag: '--command <name>',
@@ -24,8 +24,8 @@ export default defineCommand({
     },
   ],
   examples: [
-    'minimax config export-schema',
-    'minimax config export-schema --command "video generate"',
+    'mmx config export-schema',
+    'mmx config export-schema --command "video generate"',
   ],
   async run(config: Config, flags: GlobalFlags) {
     const targetCommand = flags.command as string | undefined;

@@ -11,12 +11,12 @@ import type { FileDeleteResponse } from '../../types/api';
 export default defineCommand({
   name: 'file delete',
   description: 'Delete an uploaded file from MiniMax storage',
-  usage: 'minimax file delete --file-id <id>',
+  usage: 'mmx file delete --file-id <id>',
   options: [
     { flag: '--file-id <id>', description: 'ID of the file to delete', required: true },
   ],
   examples: [
-    'minimax file delete --file-id 123456789',
+    'mmx file delete --file-id 123456789',
   ],
   async run(config: Config, flags: GlobalFlags) {
     let fileId = flags.fileId as string | undefined;
@@ -29,7 +29,7 @@ export default defineCommand({
           process.exit(1);
         }
       } else {
-        failIfMissing('file-id', 'minimax file delete --file-id <id>');
+        failIfMissing('file-id', 'mmx file delete --file-id <id>');
       }
     }
 

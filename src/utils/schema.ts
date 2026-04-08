@@ -34,7 +34,7 @@ function parseFlag(flag: string): {
 }
 
 export function generateToolSchema(cmd: Command): Record<string, unknown> {
-  const toolName = `minimax_${cmd.name.replace(/ /g, '_')}`;
+  const toolName = `mmx_${cmd.name.replace(/ /g, '_')}`;
 
   const schema: Record<string, unknown> = {
     name: toolName,

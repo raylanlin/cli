@@ -5,7 +5,7 @@ import type { Config } from '../../src/config/schema';
 function makeConfig(overrides: Partial<Config> = {}): Config {
   return {
     region: 'global' as const,
-      baseUrl: 'https://api.minimax.io',
+      baseUrl: 'https://api.mmx.io',
     output: 'text',
     timeout: 300,
     verbose: false,

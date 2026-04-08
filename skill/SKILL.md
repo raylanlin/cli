@@ -1,15 +1,15 @@
 # MiniMax CLI — Agent Skill Guide
 
-Use `minimax` to generate text, images, video, speech, music, and perform web search via the MiniMax AI platform.
+Use `mmx` to generate text, images, video, speech, music, and perform web search via the MiniMax AI platform.
 
 ## Prerequisites
 
 ```bash
-# Auth (persisted to ~/.minimax/credentials.json)
-minimax auth login --api-key sk-xxxxx
+# Auth (persisted to ~/.mmx/credentials.json)
+mmx auth login --api-key sk-xxxxx
 
 # Or pass per-call
-minimax text chat --api-key sk-xxxxx --message "Hello"
+mmx text chat --api-key sk-xxxxx --message "Hello"
 ```
 
 Region is auto-detected. Override with `--region global` or `--region cn`.
@@ -38,7 +38,7 @@ Always use these flags in non-interactive (agent/CI) contexts:
 Chat completion. Default model: `MiniMax-M2.7`.
 
 ```bash
-minimax text chat --message <text> [flags]
+mmx text chat --message <text> [flags]
 ```
 
 | Flag | Type | Description |
@@ -55,16 +55,16 @@ minimax text chat --message <text> [flags]
 
 ```bash
 # Single message
-minimax text chat --message "user:What is MiniMax?" --output json --quiet
+mmx text chat --message "user:What is MiniMax?" --output json --quiet
 
 # Multi-turn
-minimax text chat \
+mmx text chat \
   --system "You are a coding assistant." \
   --message "user:Write fizzbuzz in Python" \
   --output json
 
 # From file
-cat conversation.json | minimax text chat --messages-file - --output json
+cat conversation.json | mmx text chat --messages-file - --output json
 ```
 
 **stdout**: response text (text mode) or full response object (json mode).
@@ -76,7 +76,7 @@ cat conversation.json | minimax text chat --messages-file - --output json
 Generate images. Model: `image-01`.
 
 ```bash
-minimax image generate --prompt <text> [flags]
+mmx image generate --prompt <text> [flags]
 ```
 
 | Flag | Type | Description |
@@ -89,10 +89,10 @@ minimax image generate --prompt <text> [flags]
 | `--out-prefix <prefix>` | string | Filename prefix (default: `image`) |
 
 ```bash
-minimax image generate --prompt "A cat in a spacesuit" --output json --quiet
+mmx image generate --prompt "A cat in a spacesuit" --output json --quiet
 # stdout: image URLs (one per line in quiet mode)
 
-minimax image generate --prompt "Logo" --n 3 --out-dir ./gen/ --quiet
+mmx image generate --prompt "Logo" --n 3 --out-dir ./gen/ --quiet
 # stdout: saved file paths (one per line)
 ```
 
@@ -103,7 +103,7 @@ minimax image generate --prompt "Logo" --n 3 --out-dir ./gen/ --quiet
 Generate video. Default model: `MiniMax-Hailuo-2.3`. This is an async task — by default it polls until completion.
 
 ```bash
-minimax video generate --prompt <text> [flags]
+mmx video generate --prompt <text> [flags]
 ```
 
 | Flag | Type | Description |
@@ -119,11 +119,11 @@ minimax video generate --prompt <text> [flags]
 
 ```bash
 # Non-blocking: get task ID
-minimax video generate --prompt "A robot." --async --quiet
+mmx video generate --prompt "A robot." --async --quiet
 # stdout: {"taskId":"..."}
 
 # Blocking: wait and get file path
-minimax video generate --prompt "Ocean waves." --download ocean.mp4 --quiet
+mmx video generate --prompt "Ocean waves." --download ocean.mp4 --quiet
 # stdout: ocean.mp4
 ```
 
@@ -132,7 +132,7 @@ minimax video generate --prompt "Ocean waves." --download ocean.mp4 --quiet
 Query status of a video generation task.
 
 ```bash
-minimax video task get --task-id <id> [--output json]
+mmx video task get --task-id <id> [--output json]
 ```
 
 ### video download
@@ -140,7 +140,7 @@ minimax video task get --task-id <id> [--output json]
 Download a completed video by task ID.
 
 ```bash
-minimax video download --file-id <id> [--out <path>]
+mmx video download --file-id <id> [--out <path>]
 ```
 
 ---
@@ -150,7 +150,7 @@ minimax video download --file-id <id> [--out <path>]
 Text-to-speech. Default model: `speech-2.8-hd`. Max 10k chars.
 
 ```bash
-minimax speech synthesize --text <text> [flags]
+mmx speech synthesize --text <text> [flags]
 ```
 
 | Flag | Type | Description |
@@ -174,10 +174,10 @@ minimax speech synthesize --text <text> [flags]
 | `--stream` | boolean | Stream raw audio to stdout |
 
 ```bash
-minimax speech synthesize --text "Hello world" --out hello.mp3 --quiet
+mmx speech synthesize --text "Hello world" --out hello.mp3 --quiet
 # stdout: hello.mp3
 
-echo "Breaking news." | minimax speech synthesize --text-file - --out news.mp3
+echo "Breaking news." | mmx speech synthesize --text-file - --out news.mp3
 ```
 
 ---
@@ -187,7 +187,7 @@ echo "Breaking news." | minimax speech synthesize --text-file - --out news.mp3
 Generate music. Model: `music-2.5`. Responds well to rich, structured descriptions.
 
 ```bash
-minimax music generate --prompt <text> [--lyrics <text>] [flags]
+mmx music generate --prompt <text> [--lyrics <text>] [flags]
 ```
 
 | Flag | Type | Description |
@@ -219,10 +219,10 @@ At least one of `--prompt` or `--lyrics` is required.
 
 ```bash
 # Simple usage
-minimax music generate --prompt "Upbeat pop" --lyrics "La la la..." --out song.mp3 --quiet
+mmx music generate --prompt "Upbeat pop" --lyrics "La la la..." --out song.mp3 --quiet
 
 # Detailed prompt with vocal characteristics
-minimax music generate --prompt "Warm morning folk" \
+mmx music generate --prompt "Warm morning folk" \
   --vocals "male and female duet, harmonies in chorus" \
   --instruments "acoustic guitar, piano" \
   --bpm 95 \
@@ -230,7 +230,7 @@ minimax music generate --prompt "Warm morning folk" \
   --out duet.mp3
 
 # Instrumental (use --instrumental flag)
-minimax music generate --prompt "Cinematic orchestral, building tension" --instrumental --out bgm.mp3
+mmx music generate --prompt "Cinematic orchestral, building tension" --instrumental --out bgm.mp3
 ```
 
 ---
@@ -240,7 +240,7 @@ minimax music generate --prompt "Cinematic orchestral, building tension" --instr
 Image understanding via VLM. Provide either `--image` or `--file-id`, not both.
 
 ```bash
-minimax vision describe (--image <path-or-url> | --file-id <id>) [flags]
+mmx vision describe (--image <path-or-url> | --file-id <id>) [flags]
 ```
 
 | Flag | Type | Description |
@@ -250,7 +250,7 @@ minimax vision describe (--image <path-or-url> | --file-id <id>) [flags]
 | `--prompt <text>` | string | Question about the image (default: `"Describe the image."`) |
 
 ```bash
-minimax vision describe --image photo.jpg --prompt "What breed?" --output json
+mmx vision describe --image photo.jpg --prompt "What breed?" --output json
 ```
 
 **stdout**: description text (text mode) or full response (json mode).
@@ -262,7 +262,7 @@ minimax vision describe --image photo.jpg --prompt "What breed?" --output json
 Web search via MiniMax.
 
 ```bash
-minimax search query --q <query>
+mmx search query --q <query>
 ```
 
 | Flag | Type | Description |
@@ -270,7 +270,7 @@ minimax search query --q <query>
 | `--q <query>` | string, **required** | Search query |
 
 ```bash
-minimax search query --q "MiniMax AI" --output json --quiet
+mmx search query --q "MiniMax AI" --output json --quiet
 ```
 
 ---
@@ -280,7 +280,7 @@ minimax search query --q "MiniMax AI" --output json --quiet
 Display Token Plan usage and remaining quotas.
 
 ```bash
-minimax quota show [--output json]
+mmx quota show [--output json]
 ```
 
 ---
@@ -291,13 +291,13 @@ Export all commands as Anthropic/OpenAI-compatible JSON tool schemas:
 
 ```bash
 # All tool-worthy commands (excludes auth/config/update)
-minimax config export-schema
+mmx config export-schema
 
 # Single command
-minimax config export-schema --command "video generate"
+mmx config export-schema --command "video generate"
 ```
 
-Use this to dynamically register minimax commands as tools in your agent framework.
+Use this to dynamically register mmx commands as tools in your agent framework.
 
 ---
 
@@ -319,31 +319,31 @@ Use this to dynamically register minimax commands as tools in your agent framewo
 
 ```bash
 # stdout is always clean data — safe to pipe
-minimax text chat --message "Hi" --output json | jq '.content'
+mmx text chat --message "Hi" --output json | jq '.content'
 
 # stderr has progress/spinners — discard if needed
-minimax video generate --prompt "Waves" 2>/dev/null
+mmx video generate --prompt "Waves" 2>/dev/null
 
 # Chain: generate image → describe it
-URL=$(minimax image generate --prompt "A sunset" --quiet)
-minimax vision describe --image "$URL" --quiet
+URL=$(mmx image generate --prompt "A sunset" --quiet)
+mmx vision describe --image "$URL" --quiet
 
 # Async video workflow
-TASK=$(minimax video generate --prompt "A robot" --async --quiet | jq -r '.taskId')
-minimax video task get --task-id "$TASK" --output json
-minimax video download --task-id "$TASK" --out robot.mp4
+TASK=$(mmx video generate --prompt "A robot" --async --quiet | jq -r '.taskId')
+mmx video task get --task-id "$TASK" --output json
+mmx video download --task-id "$TASK" --out robot.mp4
 ```
 
 ---
 
 ## Configuration Precedence
 
-CLI flags → environment variables → `~/.minimax/config.json` → defaults.
+CLI flags → environment variables → `~/.mmx/config.json` → defaults.
 
 ```bash
 # Persistent config
-minimax config set --key region --value cn
-minimax config show
+mmx config set --key region --value cn
+mmx config show
 
 # Environment
 export MINIMAX_API_KEY=sk-xxxxx

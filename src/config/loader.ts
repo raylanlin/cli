@@ -12,7 +12,7 @@ export function readConfigFile(): ConfigFile {
   } catch (err) {
     const e = err as Error;
     if (e instanceof SyntaxError || e.message.includes('JSON')) {
-      process.stderr.write(`Warning: config file is corrupted. Run 'minimax config set' to reset.\n`);
+      process.stderr.write(`Warning: config file is corrupted. Run 'mmx config set' to reset.\n`);
     }
     return {};
   }

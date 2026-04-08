@@ -9,10 +9,10 @@ import type { GlobalFlags } from '../../types/flags';
 export default defineCommand({
   name: 'config show',
   description: 'Display current configuration',
-  usage: 'minimax config show',
+  usage: 'mmx config show',
   examples: [
-    'minimax config show',
-    'minimax config show --output json',
+    'mmx config show',
+    'mmx config show --output json',
   ],
   async run(config: Config, _flags: GlobalFlags) {
     const file = loadConfigFile();

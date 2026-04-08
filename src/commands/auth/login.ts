@@ -18,17 +18,17 @@ import type { QuotaResponse } from '../../types/api';
 export default defineCommand({
   name: 'auth login',
   description: 'Authenticate via OAuth or API key',
-  usage: 'minimax auth login [--method oauth|api-key] [--api-key <key>] [--no-browser]',
+  usage: 'mmx auth login [--method oauth|api-key] [--api-key <key>] [--no-browser]',
   options: [
     { flag: '--method <method>', description: 'Auth method: oauth (default), api-key' },
     { flag: '--api-key <key>', description: 'API key to store' },
     { flag: '--no-browser', description: 'Use device-code flow instead of browser' },
   ],
   examples: [
-    'minimax auth login',
-    'minimax auth login --no-browser',
-    'minimax auth login --api-key sk-xxxxx',
-    'minimax auth login --method api-key --api-key sk-xxxxx',
+    'mmx auth login',
+    'mmx auth login --no-browser',
+    'mmx auth login --api-key sk-xxxxx',
+    'mmx auth login --method api-key --api-key sk-xxxxx',
   ],
   async run(config: Config, flags: GlobalFlags) {
     const envKey = process.env.MINIMAX_API_KEY;
@@ -57,7 +57,7 @@ export default defineCommand({
         throw new CLIError(
           '--api-key is required when using --method api-key.',
           ExitCode.USAGE,
-          'minimax auth login --api-key sk-xxxxx',
+          'mmx auth login --api-key sk-xxxxx',
         );
       }
 
@@ -111,6 +111,6 @@ export default defineCommand({
 
     await saveCredentials(creds);
     process.stderr.write('Logged in successfully.\n');
-    process.stderr.write('Credentials saved to ~/.minimax/credentials.json\n');
+    process.stderr.write('Credentials saved to ~/.mmx/credentials.json\n');
   },
 });

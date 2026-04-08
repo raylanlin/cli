@@ -31,7 +31,7 @@ async function main() {
   const argv = process.argv.slice(2);
 
   if (argv.includes('--version') || argv.includes('-v')) {
-    console.log(`minimax ${CLI_VERSION}`);
+    console.log(`mmx ${CLI_VERSION}`);
     process.exit(0);
   }
 
@@ -57,7 +57,7 @@ async function main() {
       await quotaCmd.execute(config, flags);
     } else {
       process.stderr.write('  Not logged in.\n');
-      process.stderr.write('  minimax auth login --api-key sk-xxxxx\n\n');
+      process.stderr.write('  mmx auth login --api-key sk-xxxxx\n\n');
     }
     process.exit(0);
   }
@@ -95,7 +95,7 @@ async function main() {
   const newVersion = getPendingUpdateNotification();
   if (newVersion && !config.quiet) {
     process.stderr.write(`\n  Update available: ${newVersion}\n`);
-    process.stderr.write(`  npm update -g minimax-cli\n\n`);
+    process.stderr.write(`  npm update -g mmx-cli\n\n`);
   }
 }
 

@@ -11,9 +11,9 @@ import type { CredentialFile } from '../../auth/types';
 export default defineCommand({
   name: 'auth refresh',
   description: 'Manually refresh OAuth token',
-  usage: 'minimax auth refresh',
+  usage: 'mmx auth refresh',
   examples: [
-    'minimax auth refresh',
+    'mmx auth refresh',
   ],
   async run(config: Config, _flags: GlobalFlags) {
     const creds = await loadCredentials();
@@ -22,7 +22,7 @@ export default defineCommand({
       throw new CLIError(
         'Not applicable: not authenticated via OAuth.',
         ExitCode.USAGE,
-        'Run minimax auth login first.',
+        'Run mmx auth login first.',
       );
     }
 

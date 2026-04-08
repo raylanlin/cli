@@ -22,7 +22,7 @@ export async function refreshAccessToken(
     throw new CLIError(
       'OAuth session expired and could not be refreshed.',
       ExitCode.AUTH,
-      'Re-authenticate: minimax auth login',
+      'Re-authenticate: mmx auth login',
     );
   }
 

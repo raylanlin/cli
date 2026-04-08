@@ -4,7 +4,7 @@ This document lists all error scenarios and the messages users will see.
 
 ## Auth Commands
 
-### `minimax auth login`
+### `mmx auth login`
 
 | Scenario | Error Message |
 |---|---|
@@ -16,20 +16,20 @@ This document lists all error scenarios and the messages users will see.
 | OAuth token exchange failed | `OAuth token exchange failed: ${body}` |
 | `MINIMAX_API_KEY` already set (non-interactive) | `Warning: MINIMAX_API_KEY is already set in environment.` |
 
-### `minimax auth logout`
+### `mmx auth logout`
 
 | Scenario | Error Message |
 |---|---|
 | No credentials to clear | `No credentials to clear.` |
 
-### `minimax auth refresh`
+### `mmx auth refresh`
 
 | Scenario | Error Message |
 |---|---|
 | No OAuth credentials (api-key mode) | `Not applicable: not authenticated via OAuth.` |
 | Refresh token expired | `OAuth session expired and could not be refreshed.` |
 
-### `minimax auth status`
+### `mmx auth status`
 
 | Scenario | Error Message |
 |---|---|
@@ -40,7 +40,7 @@ This document lists all error scenarios and the messages users will see.
 
 ## Text Commands
 
-### `minimax text chat`
+### `mmx text chat`
 
 | Scenario | Error Message |
 |---|---|
@@ -56,7 +56,7 @@ This document lists all error scenarios and the messages users will see.
 
 ## Image Commands
 
-### `minimax image generate`
+### `mmx image generate`
 
 | Scenario | Error Message |
 |---|---|
@@ -71,7 +71,7 @@ This document lists all error scenarios and the messages users will see.
 
 ## Video Commands
 
-### `minimax video generate`
+### `mmx video generate`
 
 | Scenario | Error Message |
 |---|---|
@@ -87,13 +87,13 @@ This document lists all error scenarios and the messages users will see.
 | Disk full | `Disk full — cannot write video file.` |
 | `--download` path no write permission | `Cannot write file: ${e.message}` |
 
-### `minimax video task get`
+### `mmx video task get`
 
 | Scenario | Error Message |
 |---|---|
 | No `--task-id` | `--task-id is required.` |
 
-### `minimax video download`
+### `mmx video download`
 
 | Scenario | Error Message |
 |---|---|
@@ -108,7 +108,7 @@ This document lists all error scenarios and the messages users will see.
 
 ## Speech Commands
 
-### `minimax speech synthesize`
+### `mmx speech synthesize`
 
 | Scenario | Error Message |
 |---|---|
@@ -118,7 +118,7 @@ This document lists all error scenarios and the messages users will see.
 | `--out` path no write permission | `Permission denied: cannot write to "${outPath}".` |
 | Disk full | `Disk full — cannot write audio file.` |
 
-### `minimax speech voices`
+### `mmx speech voices`
 
 All errors fall under [Network Errors](#networkerrors).
 
@@ -126,7 +126,7 @@ All errors fall under [Network Errors](#networkerrors).
 
 ## Music Commands
 
-### `minimax music generate`
+### `mmx music generate`
 
 | Scenario | Error Message |
 |---|---|
@@ -140,7 +140,7 @@ All errors fall under [Network Errors](#networkerrors).
 
 ## Vision Commands
 
-### `minimax vision describe`
+### `mmx vision describe`
 
 | Scenario | Error Message |
 |---|---|
@@ -154,7 +154,7 @@ All errors fall under [Network Errors](#networkerrors).
 
 ## Search Commands
 
-### `minimax search query`
+### `mmx search query`
 
 | Scenario | Error Message |
 |---|---|
@@ -164,7 +164,7 @@ All errors fall under [Network Errors](#networkerrors).
 
 ## Quota Commands
 
-### `minimax quota show`
+### `mmx quota show`
 
 All errors fall under [Network Errors](#networkerrors).
 
@@ -172,7 +172,7 @@ All errors fall under [Network Errors](#networkerrors).
 
 ## Config Commands
 
-### `minimax config set`
+### `mmx config set`
 
 | Scenario | Error Message |
 |---|---|
@@ -182,7 +182,7 @@ All errors fall under [Network Errors](#networkerrors).
 | `output` value invalid | `Invalid output format "${value}". Valid values: text, json` |
 | `timeout` not a positive number | `Invalid timeout "${value}". Must be a positive number.` |
 
-### `minimax config export-schema`
+### `mmx config export-schema`
 
 | Scenario | Error Message |
 |---|---|
@@ -192,28 +192,28 @@ All errors fall under [Network Errors](#networkerrors).
 
 ## Update Commands
 
-### `minimax update`
+### `mmx update`
 
-No error scenarios — prints a message directing users to run `npm update -g minimax-cli` manually.
+No error scenarios — prints a message directing users to run `npm update -g mmx-cli` manually.
 
 ---
 
 ## File Commands
 
-### `minimax file upload`
+### `mmx file upload`
 
 | Scenario | Error Message |
 |---|---|
 | `--file` local file not found | `File not found: ${fullPath}` |
 | API error (size limit, unsupported type, etc.) | [API Errors](#api-errors) apply |
 
-### `minimax file delete`
+### `mmx file delete`
 
 | Scenario | Error Message |
 |---|---|
 | No `--file-id` in non-interactive mode | `Missing required argument: --file-id` |
 
-### `minimax file list`
+### `mmx file list`
 
 | Scenario | Error Message |
 |---|---|
@@ -263,8 +263,8 @@ No error scenarios — prints a message directing users to run `npm update -g mi
 
 | Scenario | Behavior |
 |---|---|
-| `~/.minimax/credentials.json` corrupted | Warning written to stderr; treated as no credentials |
-| `~/.minimax/config.json` corrupted | Warning written to stderr; treated as empty config |
+| `~/.mmx/credentials.json` corrupted | Warning written to stderr; treated as no credentials |
+| `~/.mmx/config.json` corrupted | Warning written to stderr; treated as empty config |
 
 ### Exit Codes
 

@@ -11,13 +11,13 @@ import type { VideoTaskResponse } from '../../types/api';
 export default defineCommand({
   name: 'video task get',
   description: 'Query video task status',
-  usage: 'minimax video task get --task-id <id>',
+  usage: 'mmx video task get --task-id <id>',
   options: [
     { flag: '--task-id <id>', description: 'Video generation task ID' },
   ],
   examples: [
-    'minimax video task get --task-id 106916112212032',
-    'minimax video task get --task-id 106916112212032 --output json',
+    'mmx video task get --task-id 106916112212032',
+    'mmx video task get --task-id 106916112212032 --output json',
   ],
   async run(config: Config, flags: GlobalFlags) {
     const taskId = flags.taskId as string | undefined;
@@ -25,7 +25,7 @@ export default defineCommand({
       throw new CLIError(
         '--task-id is required.',
         ExitCode.USAGE,
-        'minimax video task get --task-id <id>',
+        'mmx video task get --task-id <id>',
       );
     }
 

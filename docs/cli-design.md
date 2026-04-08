@@ -1,17 +1,17 @@
-# minimax CLI Design
+# mmx CLI Design
 
 ## Command Grammar
 
 All commands follow `resource + verb`:
 
 ```
-minimax <resource> <verb> [flags]
+mmx <resource> <verb> [flags]
 ```
 
 ## Command Tree
 
 ```
-minimax
+mmx
 ├── auth
 │   ├── login              Authenticate via OAuth or API key
 │   ├── status             Show current authentication state
@@ -54,11 +54,11 @@ minimax
 Credential resolution order:
 1. `--api-key` flag
 2. `$MINIMAX_API_KEY` env var
-3. `~/.minimax/credentials.json` (OAuth)
-4. `api_key` in `~/.minimax/config.yaml`
+3. `~/.mmx/credentials.json` (OAuth)
+4. `api_key` in `~/.mmx/config.yaml`
 
 ## Configuration
 
 Config precedence: flag > env var > config file > default.
 
-Config file: `~/.minimax/config.yaml`
+Config file: `~/.mmx/config.yaml`

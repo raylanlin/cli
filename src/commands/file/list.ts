@@ -9,10 +9,10 @@ import type { FileListResponse } from '../../types/api';
 export default defineCommand({
   name: 'file list',
   description: 'List uploaded files in MiniMax storage',
-  usage: 'minimax file list',
+  usage: 'mmx file list',
   examples: [
-    'minimax file list',
-    'minimax file list --output json',
+    'mmx file list',
+    'mmx file list --output json',
   ],
   async run(config: Config, _flags: GlobalFlags) {
     const format = detectOutputFormat(config.output);

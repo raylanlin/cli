@@ -10,7 +10,7 @@ describe('config show command', () => {
     const config = {
       apiKey: 'test-key',
       region: 'global' as const,
-      baseUrl: 'https://api.minimax.io',
+      baseUrl: 'https://api.mmx.io',
       output: 'json' as const,
       timeout: 300,
       verbose: false,
@@ -39,7 +39,7 @@ describe('config show command', () => {
       });
 
       const parsed = JSON.parse(output);
-      expect(parsed.base_url).toBe('https://api.minimax.io');
+      expect(parsed.base_url).toBe('https://api.mmx.io');
       expect(parsed.timeout).toBe(300);
     } finally {
       console.log = originalLog;

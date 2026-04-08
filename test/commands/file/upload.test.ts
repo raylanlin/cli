@@ -10,7 +10,7 @@ describe('file upload command', () => {
     const config = {
       apiKey: 'test-key',
       region: 'global' as const,
-      baseUrl: 'https://api.minimax.io',
+      baseUrl: 'https://api.mmx.io',
       output: 'text' as const,
       timeout: 10,
       verbose: false,

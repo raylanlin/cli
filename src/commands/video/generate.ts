@@ -22,7 +22,7 @@ import { promptText, failIfMissing } from '../../utils/prompt';
 export default defineCommand({
   name: 'video generate',
   description: 'Generate a video (Hailuo-2.3 / 2.3-Fast)',
-  usage: 'minimax video generate --prompt <text> [flags]',
+  usage: 'mmx video generate --prompt <text> [flags]',
   options: [
     { flag: '--model <model>', description: 'Model ID (default: MiniMax-Hailuo-2.3)' },
     { flag: '--prompt <text>', description: 'Video description', required: true },
@@ -34,10 +34,10 @@ export default defineCommand({
     { flag: '--poll-interval <seconds>', description: 'Polling interval when waiting (default: 5)', type: 'number' },
   ],
   examples: [
-    'minimax video generate --prompt "A man reads a book. Static shot."',
-    'minimax video generate --prompt "Ocean waves at sunset." --download sunset.mp4',
-    'minimax video generate --prompt "A robot painting." --async --quiet',
-    'minimax video generate --prompt "A robot painting." --no-wait --quiet',
+    'mmx video generate --prompt "A man reads a book. Static shot."',
+    'mmx video generate --prompt "Ocean waves at sunset." --download sunset.mp4',
+    'mmx video generate --prompt "A robot painting." --async --quiet',
+    'mmx video generate --prompt "A robot painting." --no-wait --quiet',
   ],
   async run(config: Config, flags: GlobalFlags) {
     let prompt = flags.prompt as string | undefined;
@@ -51,7 +51,7 @@ export default defineCommand({
         }
         prompt = hint;
       } else {
-        failIfMissing('prompt', 'minimax video generate --prompt <text>');
+        failIfMissing('prompt', 'mmx video generate --prompt <text>');
       }
     }
 
@@ -162,7 +162,7 @@ export default defineCommand({
     // Default: auto-download to temp location and output local file path
     const os = await import('os');
     const { join } = await import('path');
-    const destDir = join(os.tmpdir(), 'minimax-video');
+    const destDir = join(os.tmpdir(), 'mmx-video');
     const { existsSync, mkdirSync } = await import('fs');
     if (!existsSync(destDir)) mkdirSync(destDir, { recursive: true });
     const destPath = join(destDir, `${taskId}.mp4`);

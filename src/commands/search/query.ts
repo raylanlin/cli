@@ -21,13 +21,13 @@ interface SearchResponse {
 export default defineCommand({
   name: 'search query',
   description: 'Search the web via MiniMax',
-  usage: 'minimax search query --q <query>',
+  usage: 'mmx search query --q <query>',
   options: [
     { flag: '--q <query>', description: 'Search query string' },
   ],
   examples: [
-    'minimax search query --q "MiniMax AI"',
-    'minimax search query --q "latest news" --output json',
+    'mmx search query --q "MiniMax AI"',
+    'mmx search query --q "latest news" --output json',
   ],
   async run(config: Config, flags: GlobalFlags) {
     const query = (flags.q ?? (flags._positional as string[]|undefined)?.[0]) as string | undefined;
@@ -36,7 +36,7 @@ export default defineCommand({
       throw new CLIError(
         '--q is required.',
         ExitCode.USAGE,
-        'minimax search query --q "your search query"',
+        'mmx search query --q "your search query"',
       );
     }
 

@@ -13,7 +13,7 @@ import type { MusicRequest, MusicResponse } from '../../types/api';
 export default defineCommand({
   name: 'music generate',
   description: 'Generate a song (music-2.5)',
-  usage: 'minimax music generate --prompt <text> [--lyrics <text>] [--out <path>] [flags]',
+  usage: 'mmx music generate --prompt <text> [--lyrics <text>] [--out <path>] [flags]',
   options: [
     { flag: '--prompt <text>', description: 'Music style description (can be detailed — see examples)' },
     { flag: '--lyrics <text>', description: 'Song lyrics with structure tags. Use "无歌词" for instrumental music. Cannot be used with --instrumental.' },
@@ -39,14 +39,14 @@ export default defineCommand({
     { flag: '--out <path>', description: 'Save audio to file (uses hex decoding)' },
   ],
   examples: [
-    'minimax music generate --prompt "Upbeat pop" --lyrics "La la la..." --out summer.mp3',
-    'minimax music generate --prompt "Indie folk, melancholic" --lyrics-file song.txt --out my_song.mp3',
+    'mmx music generate --prompt "Upbeat pop" --lyrics "La la la..." --out summer.mp3',
+    'mmx music generate --prompt "Indie folk, melancholic" --lyrics-file song.txt --out my_song.mp3',
     '# Detailed prompt with vocal characteristics — music-2.5 responds well to rich descriptions:',
-    'minimax music generate --prompt "Warm morning folk" --vocals "male and female duet, harmonies in chorus" --instruments "acoustic guitar, piano" --bpm 95 --lyrics-file song.txt --out duet.mp3',
+    'mmx music generate --prompt "Warm morning folk" --vocals "male and female duet, harmonies in chorus" --instruments "acoustic guitar, piano" --bpm 95 --lyrics-file song.txt --out duet.mp3',
     '# Instrumental (use --instrumental flag):',
-    'minimax music generate --prompt "Cinematic orchestral, building tension" --instrumental --out bgm.mp3',
+    'mmx music generate --prompt "Cinematic orchestral, building tension" --instrumental --out bgm.mp3',
     '# Or specify "无歌词" in lyrics:',
-    'minimax music generate --prompt "Cinematic orchestral" --lyrics "无歌词" --out bgm.mp3',
+    'mmx music generate --prompt "Cinematic orchestral" --lyrics "无歌词" --out bgm.mp3',
   ],
   async run(config: Config, flags: GlobalFlags) {
     let prompt = flags.prompt as string | undefined;
@@ -61,7 +61,7 @@ export default defineCommand({
       throw new CLIError(
         'Cannot use --instrumental with --lyrics or --lyrics-file. For instrumental music, simply use --instrumental without --lyrics.',
         ExitCode.USAGE,
-        'minimax music generate --prompt <style> --instrumental',
+        'mmx music generate --prompt <style> --instrumental',
       );
     }
 
@@ -100,7 +100,7 @@ export default defineCommand({
       throw new CLIError(
         'At least one of --prompt or --lyrics is required.',
         ExitCode.USAGE,
-        'minimax music generate --prompt <text> [--lyrics <text>]',
+        'mmx music generate --prompt <text> [--lyrics <text>]',
       );
     }
 

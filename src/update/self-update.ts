@@ -142,12 +142,12 @@ export async function resolveUpdateTarget(channel: Channel): Promise<UpdateTarge
     );
   }
 
-  const downloadUrl = `https://github.com/${REPO}/releases/download/${version}/minimax-${platform}`;
+  const downloadUrl = `https://github.com/${REPO}/releases/download/${version}/mmx-${platform}`;
   return { version, downloadUrl, checksum: entry.checksum };
 }
 
 export async function applySelfUpdate(target: UpdateTarget, currentBin: string): Promise<void> {
-  const tmp = join(tmpdir(), `minimax-update-${Date.now()}`);
+  const tmp = join(tmpdir(), `mmx-update-${Date.now()}`);
 
   process.stderr.write(`Downloading ${target.version}...\n`);
   let lastPct = -1;
