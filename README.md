@@ -31,7 +31,11 @@
 ## Install
 
 ```bash
+# Install CLI
 npm install -g mmx-cli
+
+# Install CLI Skill (for AI agents / Cursor)
+npx skills add MiniMax-AI/cli -y -g
 ```
 
 > Requires [Node.js](https://nodejs.org) 18+

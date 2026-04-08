@@ -1,19 +1,21 @@
 {
   "name": "mmx-cli",
-  "version": "0.3.1",
+  "version": "1.0.0",
   "description": "CLI for the MiniMax AI Platform",
   "type": "module",
   "engines": {
     "node": ">=18"
   },
   "bin": {
-    "mmx": "./dist/mmx.mjs"
+    "mmx": "dist/mmx.mjs"
   },
-  "files": ["dist/mmx.mjs"],
+  "files": [
+    "dist/mmx.mjs"
+  ],
   "scripts": {
     "dev": "bun run src/main.ts",
     "build": "bun run build.ts",
-    "build:dev": "bun build src/main.ts --outfile dist/mmx.mjs --target node --minify --define \"process.env.CLI_VERSION='0.3.1'\" && printf '#!/usr/bin/env node\\n' | cat - dist/mmx.mjs > dist/tmp && mv dist/tmp dist/mmx.mjs && chmod +x dist/mmx.mjs",
+    "build:dev": "bun build src/main.ts --outfile dist/mmx.mjs --target node --minify --define \"process.env.CLI_VERSION='1.0.0'\" && printf '#!/usr/bin/env node\\n' | cat - dist/mmx.mjs > dist/tmp && mv dist/tmp dist/mmx.mjs && chmod +x dist/mmx.mjs",
     "prepublishOnly": "bun run build",
     "lint": "eslint src/ test/",
     "typecheck": "tsc --noEmit",

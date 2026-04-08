@@ -20,7 +20,7 @@ export interface RequestOpts {
 export async function request(config: Config, opts: RequestOpts): Promise<Response> {
   const isFormData = typeof FormData !== 'undefined' && opts.body instanceof FormData;
 
-  const version = process.env.CLI_VERSION ?? '0.3.1';
+  const version = process.env.CLI_VERSION ?? '1.0.0';
   const headers: Record<string, string> = {
     'User-Agent': `mmx-cli/${version}`,
     ...opts.headers,
