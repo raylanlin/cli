@@ -9,7 +9,7 @@ import { checkForUpdate, getPendingUpdateNotification } from './update/checker';
 import { loadCredentials } from './auth/credentials';
 import { ensureApiKey } from './auth/setup';
 
-const CLI_VERSION = process.env.CLI_VERSION ?? '1.0.0';
+const CLI_VERSION = process.env.CLI_VERSION ?? '1.0.1';
 
 // Handle Ctrl+C gracefully
 process.on('SIGINT', () => {
