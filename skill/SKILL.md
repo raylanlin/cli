@@ -228,9 +228,7 @@ mmx music generate --prompt <text> [--lyrics <text>] [flags]
 
 At least one of `--prompt` or `--lyrics` is required. For `music-2.5+` with `--instrumental`, only `--prompt` is needed. With `--lyrics-optimizer`, `--prompt` alone will auto-generate lyrics.
 
-**⚠️ Prompt length limit: 2000 chars.** All structured flags (`--vocals`, `--genre`, `--mood`, `--instruments`, `--bpm`, `--key`, `--structure`, `--references`, `--extra`, etc.) are concatenated into the final prompt. Keep the combined length under 2000. The API will return an error if exceeded — the CLI does **not** auto-truncate.
-
-**⚠️ Prompt length limit: 2000 characters total.** The structured flags (`--vocals`, `--genre`, `--mood`, `--instruments`, `--tempo`, `--bpm`, `--key`, `--avoid`, `--use-case`, `--structure`, `--references`, `--extra`) are all concatenated into the final prompt sent to the API. Keep the combined length under 2000 chars — the API will return an error if exceeded, and the CLI does **not** auto-truncate.
+**⚠️ Prompt length limit: 2000 chars.** All structured flags (`--vocals`, `--genre`, `--mood`, `--instruments`, `--tempo`, `--bpm`, `--key`, `--avoid`, `--use-case`, `--structure`, `--references`, `--extra`) are concatenated into the final prompt sent to the API. Keep the combined length under 2000 chars — the API will return an error if exceeded, and the CLI does **not** auto-truncate.
 
 #### Lyrics Structure Tags
 

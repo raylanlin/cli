@@ -97,17 +97,17 @@ export default defineCommand({
     // Handle --instrumental
     if (isInstrumental) {
       if (model === 'music-2.5+') {
-        // music-2.5+ uses native is_instrumental flag
-        structuredParts.push('Style: instrumental, no vocals, pure music');
+        // music-2.5+: native is_instrumental flag — no prompt manipulation needed
+        // (is_instrumental is set later in the body)
       } else {
-        // music-2.5: use empty-structure lyrics workaround
+        // music-2.5: lyrics workaround
         lyrics = '[intro] [outro]';
         structuredParts.push('Style: instrumental, no vocals, pure music');
       }
     }
 
-    // Handle "无歌词" as instrumental request
-    if (lyrics === '无歌词' || lyrics === 'no lyrics') {
+    // Handle "无歌词" as instrumental request (music-2.5 only — music-2.5+ uses native is_instrumental)
+    if ((lyrics === '无歌词' || lyrics === 'no lyrics') && model !== 'music-2.5+') {
       lyrics = '[intro] [outro]';
       structuredParts.push('Style: instrumental, no vocals, pure music');
     }
