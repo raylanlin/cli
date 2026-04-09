@@ -3,9 +3,11 @@ import type { OutputFormat } from './formatter';
 import { formatOutput } from './formatter';
 
 interface AudioExtraInfo {
-  audio_length?: number;
-  audio_size?: number;
-  audio_sample_rate?: number;
+  music_duration?: number;
+  music_size?: number;
+  music_sample_rate?: number;
+  music_channel?: number;
+  bitrate?: number;
 }
 
 interface AudioResponse {
@@ -26,9 +28,9 @@ export function saveAudioOutput(
     } else {
       console.log(formatOutput({
         saved: outPath,
-        duration_ms: response.extra_info?.audio_length,
-        size_bytes: response.extra_info?.audio_size,
-        sample_rate: response.extra_info?.audio_sample_rate,
+        duration_ms: response.extra_info?.music_duration,
+        size_bytes: response.extra_info?.music_size,
+        sample_rate: response.extra_info?.music_sample_rate,
       }, format));
     }
   } else {
@@ -38,8 +40,8 @@ export function saveAudioOutput(
     } else {
       console.log(formatOutput({
         url: audioUrl,
-        duration_ms: response.extra_info?.audio_length,
-        size_bytes: response.extra_info?.audio_size,
+        duration_ms: response.extra_info?.music_duration,
+        size_bytes: response.extra_info?.music_size,
       }, format));
     }
   }

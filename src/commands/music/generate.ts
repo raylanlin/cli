@@ -107,7 +107,7 @@ export default defineCommand({
     }
 
     // Handle "无歌词" as instrumental request (music-2.5 only — music-2.5+ uses native is_instrumental)
-    if ((lyrics === '无歌词' || lyrics === 'no lyrics') && model !== 'music-2.5+') {
+    else if ((lyrics === '无歌词' || lyrics === 'no lyrics') && model !== 'music-2.5+') {
       lyrics = '[intro] [outro]';
       structuredParts.push('Style: instrumental, no vocals, pure music');
     }
@@ -204,14 +204,22 @@ export default defineCommand({
       body,
     });
 
-    // Handle URL output format (24h expiry)
+    if (!config.quiet) process.stderr.write(`[Model: ${model}]\n`);
+
+    // URL output format: print URL to stdout (24h expiry — download promptly)
     if (outFormat === 'url' && response.data?.audio_url) {
-      if (!config.quiet) process.stderr.write(`[Model: ${model}]\n`);
-      if (!config.quiet) process.stderr.write(`[URL expires in 24 hours: ${response.data.audio_url}]\n`);
+      if (config.quiet) {
+        console.log(response.data.audio_url);
+      } else {
+        console.log(formatOutput({
+          url: response.data.audio_url,
+          duration_ms: response.extra_info?.music_duration,
+          size_bytes: response.extra_info?.music_size,
+        }, format));
+      }
       return;
     }
 
-    if (!config.quiet) process.stderr.write(`[Model: ${model}]\n`);
     saveAudioOutput(response, outPath, format, config.quiet);
   },
 });

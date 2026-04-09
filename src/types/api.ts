@@ -224,9 +224,10 @@ export interface MusicResponse {
     status: number;
   };
   extra_info?: {
-    audio_length?: number;
-    audio_sample_rate?: number;
-    audio_size?: number;
+    music_duration?: number;
+    music_sample_rate?: number;
+    music_channel?: number;
+    music_size?: number;
     bitrate?: number;
   };
 }
