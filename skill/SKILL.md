@@ -92,6 +92,11 @@ mmx image generate --prompt <text> [flags]
 | `--prompt <text>` | string, **required** | Image description |
 | `--aspect-ratio <ratio>` | string | e.g. `16:9`, `1:1` |
 | `--n <count>` | number | Number of images (default: 1) |
+| `--seed <n>` | number | Random seed for reproducible generation |
+| `--width <px>` | number | Custom width [512–2048, must be multiple of 8] |
+| `--height <px>` | number | Custom height [512–2048, must be multiple of 8] |
+| `--prompt-optimizer` | boolean | Automatically optimize the prompt before generation |
+| `--aigc-watermark` | boolean | Embed AI-generated content watermark |
 | `--subject-ref <params>` | string | Subject reference: `type=character,image=path-or-url` |
 | `--out-dir <dir>` | string | Download images to directory |
 | `--out-prefix <prefix>` | string | Filename prefix (default: `image`) |
@@ -102,6 +107,15 @@ mmx image generate --prompt "A cat in a spacesuit" --output json --quiet
 
 mmx image generate --prompt "Logo" --n 3 --out-dir ./gen/ --quiet
 # stdout: saved file paths (one per line)
+
+# Reproducible generation
+mmx image generate --prompt "A castle" --seed 42 --out-dir ./castle/ --quiet
+
+# Custom dimensions (must be 512–2048, multiple of 8)
+mmx image generate --prompt "Wide landscape" --width 1920 --height 1080 --out-dir ./land/ --quiet
+
+# Optimized prompt with watermark
+mmx image generate --prompt "sunset" --prompt-optimizer --aigc-watermark --out-dir ./opt/ --quiet
 ```
 
 ---
@@ -110,6 +124,8 @@ mmx image generate --prompt "Logo" --n 3 --out-dir ./gen/ --quiet
 
 Generate video. Default model: `MiniMax-Hailuo-2.3`. This is an async task — by default it polls until completion.
 
+Auto-switches model based on flags: `--last-frame` → `MiniMax-Hailuo-02` (SEF), `--subject-image` → `S2V-01` (subject reference).
+
 ```bash
 mmx video generate --prompt <text> [flags]
 ```
@@ -117,8 +133,10 @@ mmx video generate --prompt <text> [flags]
 | Flag | Type | Description |
 |---|---|---|
 | `--prompt <text>` | string, **required** | Video description |
-| `--model <model>` | string | `MiniMax-Hailuo-2.3` (default) or `MiniMax-Hailuo-2.3-Fast` |
+| `--model <model>` | string | `MiniMax-Hailuo-2.3` (default), `MiniMax-Hailuo-2.3-Fast`. Auto-overridden by `--last-frame` (Hailuo-02) or `--subject-image` (S2V-01). |
 | `--first-frame <path-or-url>` | string | First frame image |
+| `--last-frame <path-or-url>` | string | Last frame image (SEF mode, auto-switches to Hailuo-02) |
+| `--subject-image <path-or-url>` | string | Subject reference image for character consistency (auto-switches to S2V-01) |
 | `--callback-url <url>` | string | Webhook URL for completion |
 | `--download <path>` | string | Save video to specific file |
 | `--async` | boolean | Return task ID immediately |
@@ -133,6 +151,12 @@ mmx video generate --prompt "A robot." --async --quiet
 # Blocking: wait and get file path
 mmx video generate --prompt "Ocean waves." --download ocean.mp4 --quiet
 # stdout: ocean.mp4
+
+# SEF: first + last frame interpolation (uses Hailuo-02)
+mmx video generate --prompt "Walk forward" --first-frame start.jpg --last-frame end.jpg --download walk.mp4
+
+# Subject reference: character consistency (uses S2V-01)
+mmx video generate --prompt "A detective walking" --subject-image character.jpg --download detective.mp4
 ```
 
 ### video task get
@@ -186,6 +210,49 @@ mmx speech synthesize --text "Hello world" --out hello.mp3 --quiet
 # stdout: hello.mp3
 
 echo "Breaking news." | mmx speech synthesize --text-file - --out news.mp3
+```
+
+### speech clone
+
+Clone a voice from an audio sample. Two-step process: upload audio → clone.
+
+```bash
+mmx speech clone --audio <path> --voice-id <name> [flags]
+```
+
+| Flag | Type | Description |
+|---|---|---|
+| `--audio <path>` | string, **required** | Path to the reference audio file (mp3/wav) |
+| `--voice-id <name>` | string, **required** | Unique identifier for the cloned voice |
+| `--description <text>` | string | Description of the cloned voice |
+| `--clone-prompt <text>` | string | Text prompt to guide the cloning process |
+| `--out <path>` | string | Save clone result to JSON file |
+
+```bash
+mmx speech clone --audio reference.wav --voice-id my_voice --out clone_result.json --quiet
+# stdout: clone result JSON
+```
+
+### speech design
+
+Design a custom voice from a text description.
+
+```bash
+mmx speech design --prompt <text> [flags]
+```
+
+| Flag | Type | Description |
+|---|---|---|
+| `--prompt <text>` | string, **required** | Voice description (e.g. "warm female alto, calm tone") |
+| `--preview-text <text>` | string | Text to generate a preview with the designed voice |
+| `--voice-id <id>` | string | Custom voice ID to assign to the designed voice |
+| `--out <path>` | string | Save design result to JSON file |
+
+```bash
+mmx speech design --prompt "warm female alto, calm and soothing tone" --out design_result.json --quiet
+# stdout: design result JSON
+
+mmx speech design --prompt "energetic young male voice" --preview-text "Hello, this is a test." --quiet
 ```
 
 ---
@@ -398,6 +465,23 @@ mmx vision describe --image "$URL" --quiet
 TASK=$(mmx video generate --prompt "A robot" --async --quiet | jq -r '.taskId')
 mmx video task get --task-id "$TASK" --output json
 mmx video download --task-id "$TASK" --out robot.mp4
+
+# Voice cloning workflow
+mmx speech clone --audio sample.wav --voice-id my_voice --out clone.json --quiet
+VOICE_ID=$(jq -r '.voice_id' clone.json)
+mmx speech synthesize --text "Hello from my voice" --voice "$VOICE_ID" --out hello.mp3
+
+# SEF video: generate frames → interpolate video
+mmx image generate --prompt "start of journey" --out-dir /tmp/sef-start --quiet
+mmx image generate --prompt "end of journey" --out-dir /tmp/sef-end --quiet
+START=$(ls /tmp/sef-start/image_001.jpg)
+END=$(ls /tmp/sef-end/image_001.jpg)
+mmx video generate --prompt "Walk forward" --first-frame "$START" --last-frame "$END" --download walk.mp4
+
+# Reproducible image generation
+mmx image generate --prompt "A landscape" --seed 42 --out-dir ./v1/ --quiet
+mmx image generate --prompt "A landscape" --seed 42 --out-dir ./v2/ --quiet
+# Both produce identical images
 ```
 
 ---
