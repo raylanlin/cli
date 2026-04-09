@@ -18,7 +18,7 @@ process.on('SIGINT', () => {
 });
 
 // Handle stdout EPIPE gracefully (e.g., piped to `mpv` that exits early)
-process.stdout.on('error', (e) => {
+process.stdout.on('error', (e: NodeJS.ErrnoException) => {
   if (e.code === 'EPIPE') process.exit(0);
   else throw e;
 });
