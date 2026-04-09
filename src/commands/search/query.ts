@@ -20,14 +20,16 @@ interface SearchResponse {
 
 export default defineCommand({
   name: 'search query',
-  description: 'Search the web via MiniMax',
+  description: 'Search the web via MiniMax. Returns organic results with titles, URLs, and snippets.',
   usage: 'mmx search query --q <query>',
   options: [
-    { flag: '--q <query>', description: 'Search query string' },
+    { flag: '--q <query>', description: 'Search query string. Supports natural language queries.' },
   ],
   examples: [
     'mmx search query --q "MiniMax AI"',
-    'mmx search query --q "latest news" --output json',
+    'mmx search query --q "latest AI news 2025" --output json',
+    '# Use in a pipeline: search → text chat',
+    'RESULTS=$(mmx search query --q "rust async patterns" --output json --quiet) && mmx text chat --message "Summarize: $RESULTS"',
   ],
   async run(config: Config, flags: GlobalFlags) {
     const query = (flags.q ?? (flags._positional as string[]|undefined)?.[0]) as string | undefined;
