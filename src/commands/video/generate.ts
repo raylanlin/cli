@@ -64,9 +64,10 @@ export default defineCommand({
     // Determine model from flags
     const explicitModel = flags.model as string | undefined;
     let model = explicitModel || 'MiniMax-Hailuo-2.3';
-    if (flags.lastFrame) {
+    // Auto-switch only when no explicit model is provided
+    if (!explicitModel && flags.lastFrame) {
       model = 'MiniMax-Hailuo-02';
-    } else if (flags.subjectImage) {
+    } else if (!explicitModel && flags.subjectImage) {
       model = 'S2V-01';
     }
     const format = detectOutputFormat(config.output);
