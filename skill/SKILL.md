@@ -228,19 +228,11 @@ mmx music generate --prompt <text> [--lyrics <text>] [flags]
 
 At least one of `--prompt` or `--lyrics` is required. For `music-2.5+` with `--instrumental`, only `--prompt` is needed. With `--lyrics-optimizer`, `--prompt` alone will auto-generate lyrics.
 
-#### Supported Lyrics Structure Tags
+**⚠️ Prompt length limit: 2000 chars.** All structured flags (`--vocals`, `--genre`, `--mood`, `--instruments`, `--bpm`, `--key`, `--structure`, `--references`, `--extra`, etc.) are concatenated into the final prompt. Keep the combined length under 2000. The API will return an error if exceeded — the CLI does **not** auto-truncate.
 
-MiniMax supports these structure tags (case-insensitive). **Tags must be clean — no descriptions inside tags**, or they will be sung as lyrics.
+**⚠️ Prompt length limit: 2000 characters total.** The structured flags (`--vocals`, `--genre`, `--mood`, `--instruments`, `--tempo`, `--bpm`, `--key`, `--avoid`, `--use-case`, `--structure`, `--references`, `--extra`) are all concatenated into the final prompt sent to the API. Keep the combined length under 2000 chars — the API will return an error if exceeded, and the CLI does **not** auto-truncate.
 
-**Full tag list:** `[Intro]`, `[Verse]`, `[Pre Chorus]`, `[Chorus]`, `[Interlude]`, `[Bridge]`, `[Outro]`, `[Post Chorus]`, `[Transition]`, `[Break]`, `[Hook]`, `[Build Up]`, `[Inst]`, `[Solo]`
-
-#### Lyrics Structure Tags (Important)
-
-MiniMax `music-2.5` only recognizes standard structure tags. **Tags must be clean — no descriptions inside tags**, or they will be sung as lyrics.
-
-**Supported tags:** `[Intro]`, `[Verse]`, `[Pre Chorus]`, `[Chorus]`, `[Interlude]`, `[Bridge]`, `[Outro]`, `[Post Chorus]`, `[Transition]`, `[Break]`, `[Hook]`, `[Build Up]`, `[Inst]`, `[Solo]` (case-insensitive)
-
-**Most commonly used:** `[Intro]`, `[Verse]`, `[Pre Chorus]`, `[Chorus]`, `[Bridge]`, `[Outro]`
+#### Lyrics Structure Tags
 
 **Correct format:**
 ```

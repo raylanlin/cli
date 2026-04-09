@@ -139,17 +139,8 @@ export default defineCommand({
       prompt = prompt ? `${prompt}. ${structured}` : structured;
     }
 
-    // Prompt length limit: max 2000 chars
-    if (prompt && prompt.length > 2000) {
-      prompt = prompt.slice(0, 2000);
-      if (!config.quiet) process.stderr.write('[Warning: --prompt truncated to 2000 characters]\n');
-    }
-
-    // Lyrics length limit: max 3500 chars
-    if (lyrics && lyrics.length > 3500) {
-      lyrics = lyrics.slice(0, 3500);
-      if (!config.quiet) process.stderr.write('[Warning: --lyrics truncated to 3500 characters]\n');
-    }
+    // No length truncation — let the API return proper errors if limits are exceeded.
+    // Limits: prompt ≤ 2000 chars, lyrics ≤ 3500 chars
 
     const ts = new Date().toISOString().slice(0, 19).replace(/[T:]/g, '-');
     const ext = (flags.format as string) || 'mp3';
