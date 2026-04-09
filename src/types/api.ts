@@ -150,6 +150,24 @@ export interface VoiceListResponse {
   base_resp: BaseResp;
 }
 
+// ---- Voice Clone ----
+
+export interface VoiceCloneResponse {
+  base_resp: BaseResp;
+  voice_id?: string;
+  status?: string;
+  [key: string]: unknown;
+}
+
+// ---- Voice Design ----
+
+export interface VoiceDesignResponse {
+  base_resp: BaseResp;
+  voice_id?: string;
+  preview_audio?: string;
+  [key: string]: unknown;
+}
+
 // ---- Image ----
 
 export interface ImageRequest {
@@ -157,6 +175,11 @@ export interface ImageRequest {
   prompt: string;
   aspect_ratio?: string;
   n?: number;
+  seed?: number;
+  width?: number;
+  height?: number;
+  prompt_optimizer?: boolean;
+  aigc_watermark?: boolean;
   subject_reference?: Array<{
     type: string;
     image_url?: string;
@@ -180,6 +203,11 @@ export interface VideoRequest {
   model: string;
   prompt: string;
   first_frame_image?: string;
+  last_frame_image?: string;
+  subject_reference?: Array<{
+    type: string;
+    image: string[];
+  }>;
   callback_url?: string;
 }
 

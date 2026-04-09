@@ -66,9 +66,12 @@ export default defineCommand({
     const model = (flags.model as string) || 'music-2.5';
     const isInstrumental = flags.instrumental === true;
     const lyricsOptimizer = flags.lyricsOptimizer === true;
+    let noLyricsInstrumental = false; // tracks "无歌词" on music-2.5+
 
     // Check for conflicting flags: --instrumental and --lyrics/--lyrics-file
-    if (isInstrumental && (lyrics || flags.lyricsFile)) {
+    // "无歌词" and "no lyrics" are instrumental markers, not real lyrics
+    const isInstrumentalMarker = lyrics === '无歌词' || lyrics === 'no lyrics';
+    if (isInstrumental && (lyrics && !isInstrumentalMarker || flags.lyricsFile)) {
       throw new CLIError(
         'Cannot use --instrumental with --lyrics or --lyrics-file. For instrumental music, simply use --instrumental without --lyrics.',
         ExitCode.USAGE,
@@ -106,10 +109,17 @@ export default defineCommand({
       }
     }
 
-    // Handle "无歌词" as instrumental request (music-2.5 only — music-2.5+ uses native is_instrumental)
-    else if ((lyrics === '无歌词' || lyrics === 'no lyrics') && model !== 'music-2.5+') {
-      lyrics = '[intro] [outro]';
-      structuredParts.push('Style: instrumental, no vocals, pure music');
+    // Handle "无歌词" as instrumental request
+    if (lyrics === '无歌词' || lyrics === 'no lyrics') {
+      if (model === 'music-2.5+') {
+        // music-2.5+: use native is_instrumental flag, clear lyrics
+        noLyricsInstrumental = true;
+        lyrics = undefined;
+      } else {
+        // music-2.5: lyrics workaround
+        lyrics = '[intro] [outro]';
+        structuredParts.push('Style: instrumental, no vocals, pure music');
+      }
     }
 
     // Handle lyrics_optimizer: when true and lyrics is empty, API auto-generates lyrics
@@ -174,7 +184,7 @@ export default defineCommand({
       body.lyrics_optimizer = true;
     }
 
-    if (isInstrumental && model === 'music-2.5+') {
+    if ((isInstrumental || noLyricsInstrumental) && model === 'music-2.5+') {
       body.is_instrumental = true;
     }
 

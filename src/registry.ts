@@ -9,6 +9,8 @@ import authLogout from './commands/auth/logout';
 import textChat from './commands/text/chat';
 import speechSynthesize from './commands/speech/synthesize';
 import speechVoices from './commands/speech/voices';
+import speechClone from './commands/speech/clone';
+import speechDesign from './commands/speech/design';
 import imageGenerate from './commands/image/generate';
 import videoGenerate from './commands/video/generate';
 import videoTaskGet from './commands/video/task-get';
@@ -186,7 +188,7 @@ ${b('Usage:')} mmx <resource> <command> [flags]
 ${b('Resources:')}
   ${a('auth')}       ${d('Authentication (login, status, refresh, logout)')}
   ${a('text')}       ${d('Text generation (chat)')}
-  ${a('speech')}     ${d('Speech synthesis (synthesize, voices)')}
+  ${a('speech')}     ${d('Speech synthesis (synthesize, voices, clone, design)')}
   ${a('image')}      ${d('Image generation (generate)')}
   ${a('video')}      ${d('Video generation (generate, task get, download)')}
   ${a('music')}      ${d('Music generation (generate)')}
@@ -264,6 +266,8 @@ export const registry = new CommandRegistry({
   'text chat':         textChat,
   'speech synthesize': speechSynthesize,
   'speech voices':     speechVoices,
+  'speech clone':      speechClone,
+  'speech design':     speechDesign,
   'image generate':    imageGenerate,
   'video generate':    videoGenerate,
   'video task get':    videoTaskGet,

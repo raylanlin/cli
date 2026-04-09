@@ -1,4 +1,6 @@
 import { defineCommand } from '../../command';
+import { CLIError } from '../../errors/base';
+import { ExitCode } from '../../errors/codes';
 import { requestJson } from '../../client/http';
 import { imageEndpoint } from '../../client/endpoints';
 import { downloadFile } from '../../files/download';
@@ -24,6 +26,11 @@ export default defineCommand({
     { flag: '--prompt <text>', description: 'Image description', required: true },
     { flag: '--aspect-ratio <ratio>', description: 'Aspect ratio (e.g. 16:9, 1:1)' },
     { flag: '--n <count>', description: 'Number of images to generate (default: 1)', type: 'number' },
+    { flag: '--seed <n>', description: 'Random seed for reproducible results', type: 'number' },
+    { flag: '--width <px>', description: 'Custom width [512–2048, must be multiple of 8]', type: 'number' },
+    { flag: '--height <px>', description: 'Custom height [512–2048, must be multiple of 8]', type: 'number' },
+    { flag: '--prompt-optimizer', description: 'Automatically optimize the prompt before generation' },
+    { flag: '--aigc-watermark', description: 'Embed AI-generated content watermark' },
     { flag: '--subject-ref <params>', description: 'Subject reference (type=character,image=path)' },
     { flag: '--out-dir <dir>', description: 'Download images to directory' },
     { flag: '--out-prefix <prefix>', description: 'Filename prefix (default: image)' },
@@ -32,6 +39,12 @@ export default defineCommand({
     'mmx image generate --prompt "A cat in a spacesuit on Mars" --aspect-ratio 16:9',
     'mmx image generate --prompt "Logo design" --n 3 --out-dir ./generated/',
     'mmx image generate --prompt "Mountain landscape" --quiet',
+    '# Reproducible output with seed',
+    'mmx image generate --prompt "A castle" --seed 42',
+    '# Custom dimensions (must be 512–2048, multiple of 8)',
+    'mmx image generate --prompt "Wide landscape" --width 1920 --height 1080',
+    '# Optimized prompt with watermark',
+    'mmx image generate --prompt "sunset" --prompt-optimizer --aigc-watermark',
   ],
   async run(config: Config, flags: GlobalFlags) {
     let prompt = (flags.prompt ?? (flags._positional as string[]|undefined)?.[0]) as string | undefined;
@@ -56,7 +69,24 @@ export default defineCommand({
       prompt,
       aspect_ratio: (flags.aspectRatio as string) || undefined,
       n: (flags.n as number) ?? 1,
+      seed: (flags.seed as number) || undefined,
+      width: (flags.width as number) || undefined,
+      height: (flags.height as number) || undefined,
+      prompt_optimizer: flags.promptOptimizer === true || undefined,
+      aigc_watermark: flags.aigcWatermark === true || undefined,
     };
+
+    // Validate width/height: [512, 2048], multiple of 8
+    for (const [name, val] of [['--width', body.width], ['--height', body.height]] as const) {
+      if (val !== undefined) {
+        if (val < 512 || val > 2048 || val % 8 !== 0) {
+          throw new CLIError(
+            `${name} must be between 512 and 2048 and a multiple of 8 (got ${val}).`,
+            ExitCode.USAGE,
+          );
+        }
+      }
+    }
 
     if (flags.subjectRef) {
       const refStr = flags.subjectRef as string;

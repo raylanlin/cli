@@ -21,12 +21,14 @@ import { promptText, failIfMissing } from '../../utils/prompt';
 
 export default defineCommand({
   name: 'video generate',
-  description: 'Generate a video (Hailuo-2.3 / 2.3-Fast)',
+  description: 'Generate a video (Hailuo-2.3 / 2.3-Fast / Hailuo-02 / S2V-01)',
   usage: 'mmx video generate --prompt <text> [flags]',
   options: [
-    { flag: '--model <model>', description: 'Model ID (default: MiniMax-Hailuo-2.3)' },
+    { flag: '--model <model>', description: 'Model ID (default: MiniMax-Hailuo-2.3). Auto-switches to Hailuo-02 with --last-frame, S2V-01 with --subject-image.' },
     { flag: '--prompt <text>', description: 'Video description', required: true },
     { flag: '--first-frame <path-or-url>', description: 'First frame image' },
+    { flag: '--last-frame <path-or-url>', description: 'Last frame image (SEF mode, auto-switches to Hailuo-02 model)' },
+    { flag: '--subject-image <path-or-url>', description: 'Subject reference image for character consistency (auto-switches to S2V-01 model)' },
     { flag: '--callback-url <url>', description: 'Webhook URL for completion notification' },
     { flag: '--download <path>', description: 'Save video to file on completion' },
     { flag: '--no-wait', description: 'Return task ID immediately without waiting' },
@@ -38,6 +40,10 @@ export default defineCommand({
     'mmx video generate --prompt "Ocean waves at sunset." --download sunset.mp4',
     'mmx video generate --prompt "A robot painting." --async --quiet',
     'mmx video generate --prompt "A robot painting." --no-wait --quiet',
+    '# SEF: first + last frame interpolation (uses Hailuo-02 model)',
+    'mmx video generate --prompt "Walk forward" --first-frame start.jpg --last-frame end.jpg',
+    '# Subject reference: character consistency (uses S2V-01 model)',
+    'mmx video generate --prompt "A detective walking" --subject-image character.jpg',
   ],
   async run(config: Config, flags: GlobalFlags) {
     let prompt = flags.prompt as string | undefined;
@@ -55,7 +61,14 @@ export default defineCommand({
       }
     }
 
-    const model = (flags.model as string) || 'MiniMax-Hailuo-2.3';
+    // Determine model from flags
+    const explicitModel = flags.model as string | undefined;
+    let model = explicitModel || 'MiniMax-Hailuo-2.3';
+    if (flags.lastFrame) {
+      model = 'MiniMax-Hailuo-02';
+    } else if (flags.subjectImage) {
+      model = 'S2V-01';
+    }
     const format = detectOutputFormat(config.output);
 
     const body: VideoRequest = {
@@ -73,6 +86,34 @@ export default defineCommand({
         const mime = MIME_TYPES[ext] || 'image/jpeg';
         body.first_frame_image = `data:${mime};base64,${imgData.toString('base64')}`;
       }
+    }
+
+    // Last frame image (SEF mode — Hailuo-02)
+    if (flags.lastFrame) {
+      const framePath = flags.lastFrame as string;
+      if (framePath.startsWith('http')) {
+        body.last_frame_image = framePath;
+      } else {
+        const imgData = readFileSync(framePath);
+        const ext = extname(framePath).toLowerCase();
+        const mime = MIME_TYPES[ext] || 'image/jpeg';
+        body.last_frame_image = `data:${mime};base64,${imgData.toString('base64')}`;
+      }
+    }
+
+    // Subject reference image (S2V-01)
+    if (flags.subjectImage) {
+      const imgPath = flags.subjectImage as string;
+      let imageUrl: string;
+      if (imgPath.startsWith('http')) {
+        imageUrl = imgPath;
+      } else {
+        const imgData = readFileSync(imgPath);
+        const ext = extname(imgPath).toLowerCase();
+        const mime = MIME_TYPES[ext] || 'image/jpeg';
+        imageUrl = `data:${mime};base64,${imgData.toString('base64')}`;
+      }
+      body.subject_reference = [{ type: 'character', image: [imageUrl] }];
     }
 
     if (flags.callbackUrl) {
