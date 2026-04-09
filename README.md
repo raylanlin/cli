@@ -1,6 +1,4 @@
-<p align="center">
-  <img src="https://file.cdn.minimax.io/public/MMX.png" alt="MiniMax" width="320" />
-</p>
+<img src="https://file.cdn.minimax.io/public/MMX.png" alt="MiniMax" width="100%" />
 
 <p align="center">
   <strong>The official CLI for the MiniMax AI Platform</strong><br>
