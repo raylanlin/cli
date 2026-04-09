@@ -3,6 +3,7 @@ import { CLIError } from '../../errors/base';
 import { ExitCode } from '../../errors/codes';
 import { request, requestJson } from '../../client/http';
 import { speechEndpoint } from '../../client/endpoints';
+import { parseSSE } from '../../client/stream';
 import { detectOutputFormat, formatOutput } from '../../output/formatter';
 import { saveAudioOutput } from '../../output/audio';
 import { readTextFromPathOrStdin } from '../../utils/fs';
@@ -58,7 +59,8 @@ export default defineCommand({
     const model = (flags.model as string) || 'speech-2.8-hd';
     const voice = (flags.voice as string) || 'English_expressive_narrator';
     const ts = new Date().toISOString().slice(0, 19).replace(/[T:]/g, '-');
-    const outPath = (flags.out as string | undefined) ?? `speech_${ts}.mp3`;
+    const ext = (flags.format as string) || 'mp3';
+    const outPath = (flags.out as string | undefined) ?? `speech_${ts}.${ext}`;
     const outFormat = 'hex';
     const format = detectOutputFormat(config.output);
 
@@ -100,14 +102,14 @@ export default defineCommand({
 
     if (flags.stream) {
       const res = await request(config, { url, method: 'POST', body, stream: true });
-      const reader = res.body?.getReader();
-      if (!reader) throw new CLIError('No response body', ExitCode.GENERAL);
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        process.stdout.write(value);
+      for await (const event of parseSSE(res)) {
+        if (!event.data || event.data === '[DONE]') break;
+        const parsed = JSON.parse(event.data);
+        const audioHex = parsed?.data?.audio;
+        if (audioHex) {
+          process.stdout.write(Buffer.from(audioHex, 'hex'));
+        }
       }
-      reader.releaseLock();
       return;
     }
 
