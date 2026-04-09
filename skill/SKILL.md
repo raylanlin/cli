@@ -225,6 +225,37 @@ mmx music generate --prompt <text> [--lyrics <text>] [flags]
 
 At least one of `--prompt` or `--lyrics` is required.
 
+#### Lyrics Structure Tags (Important)
+
+MiniMax `music-2.5` only recognizes standard structure tags. **Tags must be clean — no descriptions inside tags**, or they will be sung as lyrics.
+
+**Supported tags:** `[Intro]`, `[Verse]`, `[Chorus]`, `[Bridge]`, `[Outro]` (case-insensitive)
+
+**Correct format:**
+```
+[Intro]
+
+[Verse]
+我把笼子 走成天空
+...
+
+[Chorus]
+走成天空 走成天空
+...
+
+[Outro]
+```
+
+**Incorrect format (will be sung):**
+```
+❌ [Verse: Clear vocals + piano]     ← Description inside tag
+❌ [Chorus: Full drums + synth]      ← Description inside tag
+```
+
+**Key rule:** All arrangement instructions (piano, reverb, drums, etc.) go in `--prompt`, `--extra`, `--instruments` — **never in lyrics**.
+
+#### Examples
+
 ```bash
 # Simple usage
 mmx music generate --prompt "Upbeat pop" --lyrics "La la la..." --out song.mp3 --quiet
@@ -239,6 +270,21 @@ mmx music generate --prompt "Warm morning folk" \
 
 # Instrumental (use --instrumental flag)
 mmx music generate --prompt "Cinematic orchestral, building tension" --instrumental --out bgm.mp3
+
+# Album song with full arrangement specification
+mmx music generate \
+  --prompt "Atmospheric electronic, B minor, 85 BPM. Piano-led intro building to full electronic arrangement." \
+  --lyrics-file "song.txt" \
+  --vocals "Warm male baritone, dynamic range" \
+  --genre "atmospheric electronic" \
+  --mood "yearning, breakthrough" \
+  --instruments "piano, strings, synth pads, electronic drums" \
+  --bpm 85 \
+  --key "B minor" \
+  --structure "Intro-Verse-Chorus-Bridge-Outro" \
+  --references "Bon Iver, James Blake" \
+  --extra "Hook has three variations. Bridge requires instrumental drop-out." \
+  --out "demo.mp3"
 ```
 
 ---
