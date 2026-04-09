@@ -192,7 +192,7 @@ echo "Breaking news." | mmx speech synthesize --text-file - --out news.mp3
 
 ### music generate
 
-Generate music. Model: `music-2.5`. Responds well to rich, structured descriptions.
+Generate music. Model: `music-2.5+` (recommended) or `music-2.5`. Responds well to rich, structured descriptions.
 
 ```bash
 mmx music generate --prompt <text> [--lyrics <text>] [flags]
@@ -200,8 +200,9 @@ mmx music generate --prompt <text> [--lyrics <text>] [flags]
 
 | Flag | Type | Description |
 |---|---|---|
-| `--prompt <text>` | string | Music style description (can be detailed) |
-| `--lyrics <text>` | string | Song lyrics with structure tags. Use `"\u65e0\u6b4c\u8bcd"` for instrumental. Cannot be used with `--instrumental` |
+| `--model <model>` | string | Model: `music-2.5+` (recommended) or `music-2.5` |
+| `--prompt <text>` | string | Music style description. **Length limits**: `music-2.5+` instrumental: [1, 2000]; others: [0, 2000] |
+| `--lyrics <text>` | string | Song lyrics with structure tags, `\n` separated. **Length limits**: [1, 3500] for vocal; not required for `music-2.5+` instrumental. Use `"\u65e0\u6b4c\u8bcd"` for instrumental workaround. Cannot be used with `--instrumental` |
 | `--lyrics-file <path>` | string | Read lyrics from file. Use `-` for stdin |
 | `--vocals <text>` | string | Vocal style, e.g. `"warm male baritone"`, `"bright female soprano"`, `"duet with harmonies"` |
 | `--genre <text>` | string | Music genre, e.g. folk, pop, jazz |
@@ -215,21 +216,31 @@ mmx music generate --prompt <text> [--lyrics <text>] [flags]
 | `--structure <text>` | string | Song structure, e.g. `"verse-chorus-verse-bridge-chorus"` |
 | `--references <text>` | string | Reference tracks or artists, e.g. `"similar to Ed Sheeran"` |
 | `--extra <text>` | string | Additional fine-grained requirements |
-| `--instrumental` | boolean | Generate instrumental music (no vocals). Cannot be used with `--lyrics` or `--lyrics-file` |
-| `--aigc-watermark` | boolean | Embed AI-generated content watermark |
+| `--instrumental` | boolean | Generate instrumental music (no vocals). `music-2.5+`: native `is_instrumental` flag; `music-2.5`: lyrics workaround. Cannot be used with `--lyrics` |
+| `--lyrics-optimizer` | boolean | Auto-generate lyrics from prompt when lyrics is empty. `music-2.5` and `music-2.5+` support. Default `false` |
+| `--output-format <fmt>` | string | Return format: `hex` (default, save to file) or `url` (24h expiry, download promptly). When `--stream`, only `hex` |
+| `--aigc-watermark` | boolean | Embed AI-generated content watermark. Only effective when `--stream` is `false` |
 | `--format <fmt>` | string | Audio format (default: `mp3`) |
 | `--sample-rate <hz>` | number | Sample rate (default: 44100) |
 | `--bitrate <bps>` | number | Bitrate (default: 256000) |
 | `--out <path>` | string | Save audio to file |
 | `--stream` | boolean | Stream raw audio to stdout |
 
-At least one of `--prompt` or `--lyrics` is required.
+At least one of `--prompt` or `--lyrics` is required. For `music-2.5+` with `--instrumental`, only `--prompt` is needed. With `--lyrics-optimizer`, `--prompt` alone will auto-generate lyrics.
+
+#### Supported Lyrics Structure Tags
+
+MiniMax supports these structure tags (case-insensitive). **Tags must be clean — no descriptions inside tags**, or they will be sung as lyrics.
+
+**Full tag list:** `[Intro]`, `[Verse]`, `[Pre Chorus]`, `[Chorus]`, `[Interlude]`, `[Bridge]`, `[Outro]`, `[Post Chorus]`, `[Transition]`, `[Break]`, `[Hook]`, `[Build Up]`, `[Inst]`, `[Solo]`
 
 #### Lyrics Structure Tags (Important)
 
 MiniMax `music-2.5` only recognizes standard structure tags. **Tags must be clean — no descriptions inside tags**, or they will be sung as lyrics.
 
-**Supported tags:** `[Intro]`, `[Verse]`, `[Chorus]`, `[Bridge]`, `[Outro]` (case-insensitive)
+**Supported tags:** `[Intro]`, `[Verse]`, `[Pre Chorus]`, `[Chorus]`, `[Interlude]`, `[Bridge]`, `[Outro]`, `[Post Chorus]`, `[Transition]`, `[Break]`, `[Hook]`, `[Build Up]`, `[Inst]`, `[Solo]` (case-insensitive)
+
+**Most commonly used:** `[Intro]`, `[Verse]`, `[Pre Chorus]`, `[Chorus]`, `[Bridge]`, `[Outro]`
 
 **Correct format:**
 ```
@@ -268,11 +279,22 @@ mmx music generate --prompt "Warm morning folk" \
   --lyrics-file song.txt \
   --out duet.mp3
 
-# Instrumental (use --instrumental flag)
-mmx music generate --prompt "Cinematic orchestral, building tension" --instrumental --out bgm.mp3
+# Instrumental — music-2.5+ (recommended, native is_instrumental)
+mmx music generate --model "music-2.5+" --prompt "Cinematic orchestral, building tension" --instrumental --out bgm.mp3
+
+# Instrumental — music-2.5 (lyrics workaround)
+mmx music generate --prompt "Cinematic orchestral" --lyrics "无歌词" --out bgm.mp3
+
+# Auto-generate lyrics from prompt (lyrics-optimizer)
+mmx music generate --prompt "indie folk, melancholic, introspective" --lyrics-optimizer --out auto.mp3
+
+# URL output (24h expiry — download promptly)
+mmx music generate --prompt "Upbeat pop" --lyrics "La la la..." --output-format url --quiet
+# stdout: URL valid for 24 hours
 
 # Album song with full arrangement specification
 mmx music generate \
+  --model "music-2.5+" \
   --prompt "Atmospheric electronic, B minor, 85 BPM. Piano-led intro building to full electronic arrangement." \
   --lyrics-file "song.txt" \
   --vocals "Warm male baritone, dynamic range" \

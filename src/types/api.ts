@@ -201,7 +201,7 @@ export interface VideoTaskResponse {
 // ---- Music ----
 
 export interface MusicRequest {
-  model: string;
+  model: 'music-2.5' | 'music-2.5+';
   prompt?: string;
   lyrics?: string;
   audio_setting?: {
@@ -212,6 +212,8 @@ export interface MusicRequest {
   output_format?: 'url' | 'hex';
   stream?: boolean;
   aigc_watermark?: boolean;
+  lyrics_optimizer?: boolean;
+  is_instrumental?: boolean;
 }
 
 export interface MusicResponse {
