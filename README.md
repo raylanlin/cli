@@ -21,7 +21,7 @@
 - **Image** — Text-to-image with aspect ratio, custom dimensions, reproducible seeds
 - **Video** — Async video generation with SEF (first+last frame) and subject reference
 - **Speech** — TTS with 30+ voices, speed control, streaming playback, voice cloning/design
-- **Music** — Text-to-music with lyrics, structured prompts, instrumental mode
+- **Music** — Text-to-music with lyrics, structured prompts, instrumental mode, auto lyrics, and cover generation from reference audio
 - **Vision** — Image understanding and description
 - **Search** — Web search powered by MiniMax
 - **Dual Region** — Seamless Global (`api.minimax.io`) and CN (`api.minimaxi.com`) support
@@ -74,21 +74,19 @@ cat messages.json | mmx text chat --messages-file - --output json
 ```bash
 mmx image "A cat in a spacesuit"
 mmx image generate --prompt "A cat" --n 3 --aspect-ratio 16:9
+mmx image generate --prompt "Castle" --seed 42 --out-dir ./castle/
+mmx image generate --prompt "Banner" --width 1920 --height 512
 mmx image generate --prompt "Logo" --out-dir ./out/
-mmx image generate --prompt "A castle" --seed 42        # Reproducible
-mmx image generate --prompt "Wide view" --width 1920 --height 1080  # Custom size
-mmx image generate --prompt "sunset" --prompt-optimizer   # Auto-enhance prompt
 ```
 
 ### `mmx video`
 
 ```bash
 mmx video generate --prompt "Ocean waves at sunset" --async
-mmx video generate --prompt "A robot painting" --download sunset.mp4
+mmx video generate --prompt "Walk forward" --first-frame start.jpg --last-frame end.jpg --download walk.mp4
+mmx video generate --prompt "A detective" --subject-image character.jpg --download detective.mp4
 mmx video task get --task-id 123456
 mmx video download --file-id 176844028768320 --out video.mp4
-mmx video generate --prompt "Walk forward" --first-frame start.jpg --last-frame end.jpg  # SEF
-mmx video generate --prompt "Detective walking" --subject-image character.jpg  # Character consistency
 ```
 
 ### `mmx speech`
@@ -99,19 +97,24 @@ mmx speech synthesize --text "Stream me" --stream | mpv -
 mmx speech synthesize --text "Hi" --voice English_magnetic_voiced_man --speed 1.2
 echo "Breaking news" | mmx speech synthesize --text-file - --out news.mp3
 mmx speech voices
-mmx speech clone --audio sample.wav --voice-id my_voice   # Clone a voice
-mmx speech design --prompt "warm female alto"              # Design a new voice
+mmx speech clone --audio ./my-voice.mp3 --name "My Voice"
+mmx speech design --prompt "Warm female voice, slightly raspy"
 ```
 
 ### `mmx music`
 
 ```bash
-mmx music generate --prompt "Upbeat pop" --lyrics "[verse] La da dee, sunny day"
-mmx music generate --prompt "Jazz" --lyrics "La la la" --out song.mp3
+# Generate with lyrics
+mmx music generate --prompt "Upbeat pop" --lyrics "[verse] La da dee, sunny day" --out song.mp3
+# Auto-generate lyrics from prompt
+mmx music generate --prompt "Indie folk, melancholic, rainy night" --lyrics-optimizer --out song.mp3
+# Instrumental (no vocals)
 mmx music generate --prompt "Cinematic orchestral" --instrumental --out bgm.mp3
-mmx music generate --model "music-2.5+" --prompt "Epic orchestral" --instrumental  # Native instrumental
-mmx music generate --prompt "indie folk" --lyrics-optimizer  # Auto-generate lyrics
-mmx music generate --prompt "pop" --lyrics "La la la" --output-format url  # 24h URL
+# URL output (24h expiry — download promptly)
+mmx music generate --prompt "Upbeat pop" --lyrics "La la la" --output-format url --quiet
+# Cover — generate a cover version from a reference audio file
+mmx music cover --prompt "Jazz, piano, warm female vocal" --audio-file original.mp3 --out cover.mp3
+mmx music cover --prompt "Indie folk" --audio https://example.com/song.mp3 --out cover.mp3
 ```
 
 ### `mmx vision`

@@ -41,7 +41,7 @@ describe('music generate command', () => {
   it('requires lyrics when only prompt is given (API contract)', async () => {
     await expect(
       generateCommand.execute(baseConfig, { ...baseFlags, prompt: 'Upbeat pop' }),
-    ).rejects.toThrow('The API requires lyrics');
+    ).rejects.toThrow('Lyrics are required');
   });
 
   it('structured flags are appended to prompt (dry-run)', async () => {
@@ -89,12 +89,12 @@ describe('music generate command', () => {
     expect(optionFlags.some((f) => f.startsWith('--aigc-watermark'))).toBe(true);
   });
 
-  it('examples include vocal and instrumental usage', () => {
+  it('examples include vocal, instrumental, and lyrics-optimizer usage', () => {
     const examples = generateCommand.examples ?? [];
     const joined = examples.join(' ');
     expect(joined).toContain('vocals');
     expect(joined).toContain('--instrumental');
-    expect(joined).toContain('无歌词');
+    expect(joined).toContain('--lyrics-optimizer');
   });
 
   it('rejects --instrumental with --lyrics', async () => {
