@@ -14,6 +14,7 @@ import type { SpeechRequest, SpeechResponse } from '../../types/api';
 export default defineCommand({
   name: 'speech synthesize',
   description: 'Synchronous TTS, up to 10k chars (speech-2.8-hd / 2.6 / 02)',
+  apiDocs: '/docs/api-reference/speech-t2a-http',
   usage: 'mmx speech synthesize --text <text> [--out <path>] [flags]',
   options: [
     { flag: '--model <model>',           description: 'Model ID (default: speech-2.8-hd)' },

@@ -78,7 +78,7 @@ function extractText(content: ContentBlock[]): string {
 export default defineCommand({
   name: 'text chat',
   description: 'Send a chat completion (MiniMax Messages API)',
-  apiDocs: 'https://platform.minimax.io/docs/api-reference/text-post',
+  apiDocs: '/docs/api-reference/text-post',
   usage: 'mmx text chat --message <text> [flags]',
   options: [
     { flag: '--model <model>', description: 'Model ID (default: MiniMax-M2.7)' },
