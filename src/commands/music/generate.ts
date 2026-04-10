@@ -13,26 +13,29 @@ import { musicGenerateModel } from './models';
 
 export default defineCommand({
   name: 'music generate',
-  description: 'Generate a song (music-2.6-free)',
+  description: 'Generate a song (music-2.6 / music-2.6-free / music-2.5+ / music-2.5)',
+  apiDocs: 'https://platform.minimax.io/docs/api-reference/music-generation',
   usage: 'mmx music generate --prompt <text> (--lyrics <text> | --instrumental | --lyrics-optimizer) [--out <path>] [flags]',
   options: [
-    { flag: '--prompt <text>', description: 'Music style description (can be detailed — see examples)' },
-    { flag: '--lyrics <text>', description: 'Song lyrics with structure tags. Required unless --instrumental or --lyrics-optimizer is used.' },
-    { flag: '--lyrics-file <path>', description: 'Read lyrics from file (use - for stdin)' },
+    { flag: '--prompt <text>', description: 'Music style description (e.g. "cinematic orchestral, building tension"). Max 2000 chars when combined with structured flags.' },
+    { flag: '--lyrics <text>', description: 'Song lyrics with structure tags (newline separated). Supported: [Intro], [Verse], [Pre Chorus], [Chorus], [Interlude], [Bridge], [Outro], [Post Chorus], [Transition], [Break], [Hook], [Build Up], [Inst], [Solo]. Tags must be clean — no descriptions inside brackets (they will be sung). Max 3500 chars.' },
+    { flag: '--lyrics-file <path>', description: 'Read lyrics from file (use - for stdin). Same tag rules as --lyrics.' },
     { flag: '--lyrics-optimizer', description: 'Auto-generate lyrics from prompt (cannot be used with --lyrics or --instrumental)' },
-    { flag: '--instrumental', description: 'Generate instrumental music (no vocals). Cannot be used with --lyrics.' },
+    { flag: '--instrumental', description: 'Generate instrumental music (no vocals). music-2.6/music-2.5+: native is_instrumental flag; music-2.5: lyrics workaround. Cannot be used with --lyrics.' },
     { flag: '--vocals <text>', description: 'Vocal style, e.g. "warm male baritone", "bright female soprano", "duet with harmonies"' },
-    { flag: '--genre <text>', description: 'Music genre, e.g. folk, pop, jazz' },
+    { flag: '--genre <text>', description: 'Music genre, e.g. folk, pop, jazz, electronic' },
     { flag: '--mood <text>', description: 'Mood or emotion, e.g. warm, melancholic, uplifting' },
-    { flag: '--instruments <text>', description: 'Instruments to feature, e.g. "acoustic guitar, piano"' },
+    { flag: '--instruments <text>', description: 'Instruments to feature, e.g. "acoustic guitar, piano, strings"' },
     { flag: '--tempo <text>', description: 'Tempo description, e.g. fast, slow, moderate' },
     { flag: '--bpm <number>', description: 'Exact tempo in beats per minute', type: 'number' },
     { flag: '--key <text>', description: 'Musical key, e.g. C major, A minor, G sharp' },
     { flag: '--avoid <text>', description: 'Elements to avoid in the generated music' },
     { flag: '--use-case <text>', description: 'Use case context, e.g. "background music for video", "theme song"' },
     { flag: '--structure <text>', description: 'Song structure, e.g. "verse-chorus-verse-bridge-chorus"' },
-    { flag: '--references <text>', description: 'Reference tracks or artists, e.g. "similar to Ed Sheeran, Taylor Swift"' },
+    { flag: '--references <text>', description: 'Reference tracks or artists, e.g. "similar to Ed Sheeran"' },
     { flag: '--extra <text>', description: 'Additional fine-grained requirements not covered above' },
+    { flag: '--model <model>', description: 'Model: music-2.6 (recommended), music-2.6-free (default, unlimited), music-2.5+, or music-2.5.' },
+    { flag: '--output-format <fmt>', description: 'Return format: hex (default, saved to file) or url (24h expiry, download promptly). When --stream, only hex.' },
     { flag: '--aigc-watermark', description: 'Embed AI-generated content watermark in audio for content provenance' },
     { flag: '--format <fmt>', description: 'Audio format (default: mp3)' },
     { flag: '--sample-rate <hz>', description: 'Sample rate (default: 44100)', type: 'number' },
@@ -47,6 +50,10 @@ export default defineCommand({
     'mmx music generate --prompt "Upbeat pop about summer" --lyrics-optimizer --out summer.mp3',
     '# Instrumental:',
     'mmx music generate --prompt "Cinematic orchestral, building tension" --instrumental --out bgm.mp3',
+    '# URL output (24h expiry — download promptly):',
+    'mmx music generate --prompt "Upbeat pop" --lyrics "La la la..." --output-format url',
+    '# Instrumental with music-2.5+:',
+    'mmx music generate --prompt "Cinematic orchestral" --model "music-2.5+" --instrumental --out bgm.mp3',
     '# Detailed prompt with vocal characteristics:',
     'mmx music generate --prompt "Warm morning folk" --vocals "male and female duet, harmonies in chorus" --instruments "acoustic guitar, piano" --bpm 95 --lyrics-file song.txt --out duet.mp3',
   ],
@@ -117,7 +124,8 @@ export default defineCommand({
     const outPath = (flags.out as string | undefined) ?? `music_${ts}.${ext}`;
     const format = detectOutputFormat(config.output);
 
-    const model = musicGenerateModel(config);
+    const model = (flags.model as string) || musicGenerateModel(config);
+    const outFormat = (flags.outputFormat as string) || 'hex';
     const body: MusicRequest = {
       model,
       prompt,
@@ -129,7 +137,7 @@ export default defineCommand({
         sample_rate: (flags.sampleRate as number) ?? 44100,
         bitrate: (flags.bitrate as number) ?? 256000,
       },
-      output_format: 'hex',
+      output_format: (flags.stream === true ? 'hex' : outFormat) as 'hex' | 'url',
       stream: flags.stream === true,
     };
 
@@ -162,6 +170,14 @@ export default defineCommand({
     });
 
     if (!config.quiet) process.stderr.write(`[Model: ${model}]\n`);
+    if (outFormat === 'url' && response.data?.audio_url) {
+      if (config.quiet) {
+        process.stdout.write(response.data.audio_url);
+      } else {
+        process.stdout.write(formatOutput({ audio_url: response.data.audio_url }, format));
+      }
+      return;
+    }
     saveAudioOutput(response, outPath, format, config.quiet);
   },
 });
