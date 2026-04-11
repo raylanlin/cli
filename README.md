@@ -82,8 +82,8 @@ mmx image generate --prompt "Logo" --out-dir ./out/
 ### `mmx video`
 
 ```bash
-mmx video generate --prompt "Ocean waves at sunset" --async
-mmx video generate --prompt "A robot painting" --download sunset.mp4
+mmx video generate --prompt "Ocean waves at sunset" --download sunset.mp4
+mmx video generate --prompt "A robot painting" --async
 mmx video task get --task-id 123456
 mmx video download --file-id 176844028768320 --out video.mp4
 ```
@@ -136,6 +136,10 @@ mmx auth status
 mmx auth refresh
 mmx auth logout
 ```
+
+`mmx auth status` is the canonical way to verify active authentication.
+`~/.mmx/credentials.json` exists only for OAuth login. API-key login persists to
+`~/.mmx/config.json` (and `--api-key` can also be passed per command).
 
 ### `mmx config` · `mmx quota`
 

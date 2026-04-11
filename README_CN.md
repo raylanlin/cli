@@ -82,8 +82,8 @@ mmx image generate --prompt "山水画" --out-dir ./output/
 ### `mmx video`
 
 ```bash
-mmx video generate --prompt "海浪拍打礁石" --async
-mmx video generate --prompt "机器人作画" --download sunset.mp4
+mmx video generate --prompt "海浪拍打礁石" --download sunset.mp4
+mmx video generate --prompt "机器人作画" --async
 mmx video task get --task-id 123456
 mmx video download --file-id 176844028768320 --out video.mp4
 ```
@@ -136,6 +136,10 @@ mmx auth status
 mmx auth refresh
 mmx auth logout
 ```
+
+请使用 `mmx auth status` 作为认证状态的权威检查方式。`~/.mmx/credentials.json`
+只在 OAuth 登录时存在；API Key 登录会写入 `~/.mmx/config.json`（也可每次通过
+`--api-key` 直接传入）。
 
 ### `mmx config` · `mmx quota`
 
