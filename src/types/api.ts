@@ -162,6 +162,7 @@ export interface ImageRequest {
   height?: number;
   prompt_optimizer?: boolean;
   aigc_watermark?: boolean;
+  response_format?: 'url' | 'base64';
   subject_reference?: Array<{
     type: string;
     image_url?: string;
@@ -172,7 +173,8 @@ export interface ImageRequest {
 export interface ImageResponse {
   base_resp: BaseResp;
   data: {
-    image_urls: string[];
+    image_urls?: string[];
+    image_base64?: string[];
     task_id: string;
     success_count: number;
     failed_count: number;
